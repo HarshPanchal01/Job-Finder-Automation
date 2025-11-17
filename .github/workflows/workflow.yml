@@ -36,4 +36,4 @@ jobs:
           title: Weekly Job Search Results
           content-filepath: ./jobs.md
           labels: Automation-Email
-          assignees: ${{ github.repository_owner }}
+          assignees: HarshPanchal01, anmolp476 
