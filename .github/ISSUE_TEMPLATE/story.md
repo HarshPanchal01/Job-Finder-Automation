@@ -1,17 +1,17 @@
 ---
 name: Development Story
 about: A story outlining a new feature or development task.
-title: "[STORY] "
+title: ""
 labels: enhancement
 assignees: ""
 ---
 
-## 📝 Summary
+## Summary
 Add a brief, clear summary of the story/feature here. This should explain the "what" and "why" in one or two sentences.
 
 ---
 
-## 🛠 Proposed Implementation
+## Proposed Implementation
 Detail the technical steps required to complete this story. Think of this as the initial plan for the developer.
 
 * Step 1: Describe the first action (e.g., Update the $User$ model to include $has\_profile$ field).
@@ -20,7 +20,7 @@ Detail the technical steps required to complete this story. Think of this as the
 
 ---
 
-## ✅ Acceptance Criteria
+## Acceptance Criteria
 These are the measurable requirements that must be met for the story to be considered complete and ready for review.
 
 - [ ] The feature works as described in the summary.
@@ -30,5 +30,5 @@ These are the measurable requirements that must be met for the story to be consi
 
 ---
 
-## 💬 Additional Context
+## Additional Context
 Add any relevant mockups, wireframes, technical notes, or links to related issues/documentation here.
