@@ -1,47 +1,48 @@
 ---
 name: Pull Request
-about: Create a pull request to contribute to the project
+about: Merge changes for a specific development story.
 title: "[PR] "
-labels: ""
+labels: needs review
 assignees: ""
 ---
 
-## Description
+## 📝 Summary of Changes
+Briefly describe the changes included in this PR.
 
-Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
+* **Story/Issue Fixed:** Links to the associated development story or issue.
+    * Fixes #[ISSUE NUMBER]
 
-Fixes # (issue)
+---
 
-## Type of change
+## 🚀 Key Implementation Details
+Highlight the most important changes and decisions made during implementation.
 
-Please delete options that are not relevant.
+* **Database/Model Changes?** (Yes/No)
+* **New Dependencies?** (If yes, list them)
+* **Key Files Changed:** List the main files where work occurred.
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+---
 
-## How Has This Been Tested?
+## ✅ Acceptance Criteria Check
+Ensure all requirements from the linked story have been met.
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
+* [ ] All Acceptance Criteria from the associated issue have been verified.
 
-- [ ] Test A
-- [ ] Test B
+---
 
-**Test Configuration**:
+## 🧪 Testing Performed
+Describe how you verified your changes work locally.
 
-- Firmware version:
-- Hardware:
-- Toolchain:
-- SDK:
+* Tested the feature locally:
+    * **Steps to Verify:** (e.g., Logged in as User X, navigated to `/new-feature`, and confirmed data was saved).
+* [ ] New/existing tests pass locally.
 
-## Checklist:
+---
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [- ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published in downstream modules
+## 🛠 Self-Review Checklist
+A quick check before requesting review.
+
+* [ ] My code follows the project's established style/linting guidelines.
+* [ ] I have reviewed my own code changes before submitting.
+* [ ] Code is appropriately commented, especially in complex areas.
+* [ ] My changes introduce no new build warnings or errors.
