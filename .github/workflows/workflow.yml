@@ -28,7 +28,7 @@ jobs:
       - name: Run script
         env:
           API_KEY: ${{ secrets.API_KEY }}
-        run: python scripts/job_finder.py
+        run: python src/job_finder.py
 
       - name: Create GitHub Issue
         uses: peter-evans/create-issue-from-file@v4
