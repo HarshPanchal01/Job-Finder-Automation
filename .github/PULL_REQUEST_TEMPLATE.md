@@ -1,12 +1,12 @@
 ---
 name: Pull Request
 about: Merge changes for a specific development story.
-title: "[PR] "
+title: ""
 labels: needs review
 assignees: ""
 ---
 
-## 📝 Summary of Changes
+## Summary of Changes
 Briefly describe the changes included in this PR.
 
 * **Story/Issue Fixed:** Links to the associated development story or issue.
@@ -14,7 +14,7 @@ Briefly describe the changes included in this PR.
 
 ---
 
-## 🚀 Key Implementation Details
+## Key Implementation Details
 Highlight the most important changes and decisions made during implementation.
 
 * **Database/Model Changes?** (Yes/No)
@@ -23,14 +23,14 @@ Highlight the most important changes and decisions made during implementation.
 
 ---
 
-## ✅ Acceptance Criteria Check
+## Acceptance Criteria Check
 Ensure all requirements from the linked story have been met.
 
 * [ ] All Acceptance Criteria from the associated issue have been verified.
 
 ---
 
-## 🧪 Testing Performed
+## Testing Performed
 Describe how you verified your changes work locally.
 
 * Tested the feature locally:
@@ -39,7 +39,7 @@ Describe how you verified your changes work locally.
 
 ---
 
-## 🛠 Self-Review Checklist
+## Self-Review Checklist
 A quick check before requesting review.
 
 * [ ] My code follows the project's established style/linting guidelines.
