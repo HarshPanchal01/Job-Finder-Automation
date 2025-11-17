@@ -35,5 +35,5 @@ jobs:
         with:
           title: Weekly Job Search Results
           content-filepath: ./jobs.md
-          labels: jobs, automation
+          labels: Automation-Email
           assignees: ${{ github.repository_owner }}
