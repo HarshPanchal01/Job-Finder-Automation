@@ -28,7 +28,12 @@ jobs:
       - name: Run script
         env:
           API_KEY: ${{ secrets.API_KEY }}
-        run: python src/job_finder.py
+          SEARCH_QUERY: ${{ vars.SEARCH_QUERY }}
+          LOCATION: ${{ vars.LOCATION }}
+          GOOGLE_DOMAIN: ${{ vars.GOOGLE_DOMAIN }}
+          GL: ${{ vars.GL }}
+          HL: ${{ vars.HL }}
+        run: python src/main.py
 
       - name: Create GitHub Issue
         uses: peter-evans/create-issue-from-file@v4
@@ -36,4 +41,4 @@ jobs:
           title: Weekly Job Search Results
           content-filepath: ./jobs.md
           labels: Automation-Email
-          assignees: HarshPanchal01, anmolp476 
+          assignees: HarshPanchal01, anmolp476
