@@ -7,6 +7,7 @@ class FileManager:
         """
         Saves the raw data to a JSON file.
         """
+        print(f"Saving JSON data to {filename}...")
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
         print(f"Job results saved to {filename}")
@@ -16,6 +17,7 @@ class FileManager:
         """
         Saves the parsed job data to a Markdown file.
         """
+        print(f"Saving Markdown data to {filename}...")
         with open(filename, 'w') as f:
             f.write("## Weekly Job Search Results\n\n")
             if jobs:

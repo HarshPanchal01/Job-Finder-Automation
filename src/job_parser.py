@@ -5,6 +5,7 @@ class JobParser:
         Extracts relevant fields from the raw job data.
         """
         title = job_data.get('title', 'N/A')
+        print(f"Parsing job: {title}")
         company = job_data.get('company_name', 'N/A')
         location = job_data.get('location', 'N/A')
         link = job_data.get('share_link')
