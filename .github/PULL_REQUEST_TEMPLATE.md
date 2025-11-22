@@ -2,7 +2,7 @@
 name: Pull Request
 about: Merge changes for a specific development story.
 title: ""
-labels: needs review
+labels: "" 
 assignees: ""
 ---
 
@@ -36,13 +36,3 @@ Describe how you verified your changes work locally.
 * Tested the feature locally:
     * **Steps to Verify:** (e.g., Logged in as User X, navigated to `/new-feature`, and confirmed data was saved).
 * [ ] New/existing tests pass locally.
-
----
-
-## Self-Review Checklist
-A quick check before requesting review.
-
-* [ ] My code follows the project's established style/linting guidelines.
-* [ ] I have reviewed my own code changes before submitting.
-* [ ] Code is appropriately commented, especially in complex areas.
-* [ ] My changes introduce no new build warnings or errors.
