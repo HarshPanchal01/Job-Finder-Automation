@@ -7,7 +7,6 @@ class Config:
         self.api_key = os.getenv("API_KEY")
         
         # Load search parameters from environment variables with defaults
-        # We use 'or' to handle cases where the env var is set but empty
         self.search_params = {
             "engine": "google_jobs",
             "google_domain": os.getenv("GOOGLE_DOMAIN") or "google.ca",

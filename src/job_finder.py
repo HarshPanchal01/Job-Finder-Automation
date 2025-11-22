@@ -14,5 +14,11 @@ class JobFinder:
         
         search = GoogleSearch(search_params)
         results = search.get_dict()
+        
+        # Debugging: Print what keys are returned
+        print(f"DEBUG: Keys returned from API: {list(results.keys())}")
+        if "error" in results:
+            print(f"DEBUG: API Error: {results['error']}")
+        
         return results.get("jobs_results", [])
 

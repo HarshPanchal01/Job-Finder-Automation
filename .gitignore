@@ -3,3 +3,4 @@
 jobs.json
 jobs.md
 playbook.yml
+__pycache__
