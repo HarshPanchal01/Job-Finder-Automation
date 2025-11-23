@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 
 class Config:
@@ -13,5 +14,20 @@ class Config:
             "q": os.getenv("SEARCH_QUERY") or "software developer",
             "gl": os.getenv("GL") or "ca",
             "hl": os.getenv("HL") or "en",
-            "location": os.getenv("LOCATION") or "Toronto, Ontario, Canada"
         }
+
+        # Handle multiple locations
+        locations_str = os.getenv("LOCATIONS")
+        if locations_str:
+            try:
+                # Try parsing as JSON list
+                self.locations = json.loads(locations_str)
+                # Ensure it's a list
+                if not isinstance(self.locations, list):
+                    self.locations = [str(self.locations)]
+            except json.JSONDecodeError:
+                # Fallback: Treat as a single location string
+                self.locations = [locations_str]
+        else:
+            # Default to a single location if LOCATIONS is not set, but treat it as a list
+            self.locations = ["Toronto, Ontario, Canada"]

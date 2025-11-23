@@ -6,14 +6,14 @@ The goal of this repository is to fetch jobs from linkedin, glassdoor, indeed, b
 
 You can configure the job search parameters using environment variables. This works for both local development (using a `.env` file) and GitHub Actions (using Repository Variables/Secrets).
 
-| Variable        | Description                         | Default                    |
-| --------------- | ----------------------------------- | -------------------------- |
-| `API_KEY`       | **Required**. Your SerpApi API Key. | None                       |
-| `SEARCH_QUERY`  | The search query for jobs.          | `new grad 2026 tech`       |
-| `LOCATION`      | The location to search in.          | `Toronto, Ontario, Canada` |
-| `GOOGLE_DOMAIN` | The Google domain to use.           | `google.ca`                |
-| `GL`            | Country code for search results.    | `ca`                       |
-| `HL`            | Language code for search results.   | `en`                       |
+| Variable        | Description                         | Default                        |
+| --------------- | ----------------------------------- | ------------------------------ |
+| `API_KEY`       | **Required**. Your SerpApi API Key. | None                           |
+| `SEARCH_QUERY`  | The search query for jobs.          | `new grad 2026 tech`           |
+| `LOCATIONS`     | JSON array of locations.            | `["Toronto, Ontario, Canada"]` |
+| `GOOGLE_DOMAIN` | The Google domain to use.           | `google.ca`                    |
+| `GL`            | Country code for search results.    | `ca`                           |
+| `HL`            | Language code for search results.   | `en`                           |
 
 ### Local Development
 
@@ -22,11 +22,11 @@ You can configure the job search parameters using environment variables. This wo
    ```env
    API_KEY=your_api_key_here
    SEARCH_QUERY="software engineer intern"
-   LOCATION="San Francisco, CA"
+   LOCATIONS='["Toronto, Ontario, Canada", "Vancouver, British Columbia, Canada"]'
    ```
 
 ### GitHub Actions
 
 1. Go to your repository settings -> **Secrets and variables** -> **Actions**.
 2. Add `API_KEY` as a **Repository Secret**.
-3. Add other parameters (e.g., `SEARCH_QUERY`, `LOCATION`) as **Repository Variables**.
+3. Add other parameters (e.g., `SEARCH_QUERY`, `LOCATIONS`) as **Repository Variables**.

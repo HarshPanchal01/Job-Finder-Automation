@@ -16,16 +16,25 @@ def main():
     finder = JobFinder(config.api_key)
     print("JobFinder initialized.")
     
-    print("Searching for jobs...")
-    # Execute search
-    jobs = finder.search_jobs(config.search_params)
-    jobs = finder.removeDuplicates(jobs)
-    print(f"Search completed. Found {len(jobs)} jobs.")
+    all_jobs = []
+    
+    for location in config.locations:
+        print(f"Searching for jobs in {location}...")
+        # Execute search
+        search_params = config.search_params.copy()
+        search_params["location"] = location
+        
+        jobs = finder.search_jobs(search_params)
+        jobs = finder.removeDuplicates(jobs)
+        print(f"Found {len(jobs)} jobs in {location}.")
+        all_jobs.extend(jobs)
+    
+    print(f"Search completed. Total jobs found: {len(all_jobs)}")
     
     # Save results
     print("Saving results...")
-    FileManager.save_json(jobs, 'jobs.json')
-    FileManager.save_markdown(jobs, 'jobs.md')
+    FileManager.save_json(all_jobs, 'jobs.json')
+    FileManager.save_markdown(all_jobs, 'jobs.md')
     print("Automation completed successfully.")
 
 if __name__ == "__main__":

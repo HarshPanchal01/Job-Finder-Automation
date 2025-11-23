@@ -55,8 +55,16 @@ class JobFinder:
         if "error" in results:
             print(f"DEBUG: API Error: {results['error']}")
         
-        return all_res
-    
+
+        jobs = results.get("jobs_results", [])
+        
+        # Inject search location into each job result
+        search_location = params.get("location", "Unknown")
+        for job in jobs:
+            job["search_location"] = search_location
+            
+        return jobs
+
     def removeDuplicates(self, jobs):
         """
         Removes duplicate jobs based on (title, company, location).
