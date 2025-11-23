@@ -23,7 +23,7 @@ You can configure the job search parameters using environment variables. This wo
    ```env
    API_KEY=your_api_key_here
    SEARCH_QUERY="software engineer intern"
-   LOCATIONS='["San Francisco, CA", "New York, NY"]'
+   LOCATIONS=["San Francisco, CA", "New York, NY"]
    MAX_PAGES=3
    ```
 

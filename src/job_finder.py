@@ -79,6 +79,5 @@ class JobFinder:
                 seen.add(key)
                 unique.append(job)
 
-        print(f"{len(unique)} duplicates found.")
-        print(f"Results after removing duplicates: {len(unique)}")
+        print(f"Results after dedupe: {len(unique)}")
         return unique

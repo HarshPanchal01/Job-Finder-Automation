@@ -25,7 +25,6 @@ def main():
         search_params["location"] = location
         
         jobs = finder.search_jobs(search_params)
-        jobs = finder.removeDuplicates(jobs)
         print(f"Found {len(jobs)} jobs in {location}.")
         all_jobs.extend(jobs)
     
