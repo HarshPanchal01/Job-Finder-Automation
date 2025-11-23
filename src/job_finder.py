@@ -22,5 +22,12 @@ class JobFinder:
         if "error" in results:
             print(f"DEBUG: API Error: {results['error']}")
         
-        return results.get("jobs_results", [])
+        jobs = results.get("jobs_results", [])
+        
+        # Inject search location into each job result
+        search_location = params.get("location", "Unknown")
+        for job in jobs:
+            job["search_location"] = search_location
+            
+        return jobs
 

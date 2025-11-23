@@ -9,6 +9,7 @@ class JobParser:
         company = job_data.get('company_name', 'N/A')
         location = job_data.get('location', 'N/A')
         link = job_data.get('share_link')
+        search_location = job_data.get('search_location', 'N/A')
         
         posted_date = "N/A"
         if 'extensions' in job_data and job_data['extensions']:
@@ -22,5 +23,6 @@ class JobParser:
             "company": company,
             "location": location,
             "link": link,
-            "posted_date": posted_date
+            "posted_date": posted_date,
+            "search_location": search_location
         }

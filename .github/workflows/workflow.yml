@@ -7,8 +7,8 @@ on:
         description: "Search Query"
         required: false
         type: string
-      location:
-        description: "Location"
+      locations:
+        description: "Locations (comma-separated)"
         required: false
         type: string
       google_domain:
@@ -50,7 +50,7 @@ jobs:
         env:
           API_KEY: ${{ secrets.API_KEY }}
           SEARCH_QUERY: ${{ inputs.search_query || vars.SEARCH_QUERY }}
-          LOCATION: ${{ inputs.location || vars.LOCATION }}
+          LOCATIONS: ${{ inputs.locations || vars.LOCATIONS }}
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
