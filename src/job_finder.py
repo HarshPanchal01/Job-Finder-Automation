@@ -23,7 +23,7 @@ class JobFinder:
         for page in range(self.max_pages):
             if next_page_token:
                 search_params["next_page_token"] = next_page_token
-                print(f"Fetching next page with token: {next_page_token}")
+                print(f"Fetching next page with token.")
             else:
                 print("Fetching first page of results.")
 
@@ -76,5 +76,3 @@ class JobFinder:
 
         print(f"Results after dedupe: {len(unique)}")
         return unique
-
-
