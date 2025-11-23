@@ -18,7 +18,7 @@ class FileManager:
         Saves the parsed job data to a Markdown file.
         """
         print(f"Saving Markdown data to {filename}...")
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding="utf-8") as f:
             f.write("## Weekly Job Search Results\n\n")
             if jobs:
                 for job in jobs:

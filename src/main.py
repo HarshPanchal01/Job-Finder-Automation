@@ -19,6 +19,7 @@ def main():
     print("Searching for jobs...")
     # Execute search
     jobs = finder.search_jobs(config.search_params)
+    jobs = finder.removeDuplicates(jobs)
     print(f"Search completed. Found {len(jobs)} jobs.")
     
     # Save results

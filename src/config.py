@@ -10,7 +10,7 @@ class Config:
         self.search_params = {
             "engine": "google_jobs",
             "google_domain": os.getenv("GOOGLE_DOMAIN") or "google.ca",
-            "q": os.getenv("SEARCH_QUERY") or "new grad 2026 tech",
+            "q": os.getenv("SEARCH_QUERY") or "software developer",
             "gl": os.getenv("GL") or "ca",
             "hl": os.getenv("HL") or "en",
             "location": os.getenv("LOCATION") or "Toronto, Ontario, Canada"
