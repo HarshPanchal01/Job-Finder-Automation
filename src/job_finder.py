@@ -14,16 +14,18 @@ class JobFinder:
         print(f"Executing search with params: {params}")
 
         all_res = []
+        next_page_token = None
 
         # Ensure API key is in params
         search_params = params.copy()
         search_params["api_key"] = self.api_key
         
         for page in range(self.max_pages):
-            start = page * self.results_per_page
-            search_params["start"] = start
-
-            print(f"Searching page {page + 1} with start={start}...")
+            if next_page_token:
+                search_params["next_page_token"] = next_page_token
+                print(f"Fetching next page with token: {next_page_token}")
+            else:
+                print("Fetching first page of results.")
 
             search = GoogleSearch(search_params)
             results = search.get_dict()
@@ -41,6 +43,12 @@ class JobFinder:
                 break
 
             all_res.extend(page_results)
+
+            next_page_token = results.get("serpapi_pagination", {}).get("next_page_token")
+
+            if not next_page_token:
+                print("No next page token found, ending pagination.")
+                break
         
         # Debugging: Print what keys are returned
         print(f"DEBUG: Keys returned from API: {list(results.keys())}")
