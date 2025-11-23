@@ -62,9 +62,15 @@ jobs:
         run: python src/main.py
 
       - name: Create GitHub Issue
+        id: create-issue
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: Weekly Job Search Results
           content-filepath: ./jobs.md
           labels: Automation-Email
           assignees: HarshPanchal01, anmolp476
+
+      - name: Close created issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh issue close ${{ steps.create-issue.outputs.issue-number }} --comment "Closing automatically to keep issue tracker clean."
