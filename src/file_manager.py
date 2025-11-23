@@ -28,7 +28,7 @@ class FileManager:
                 jobs_by_location[search_loc] = []
             jobs_by_location[search_loc].append(parsed_job)
 
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding="utf-8") as f:
             f.write("## Weekly Job Search Results\n\n")
             
             if not jobs:
