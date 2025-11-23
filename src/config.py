@@ -31,3 +31,9 @@ class Config:
         else:
             # Default to a single location if LOCATIONS is not set, but treat it as a list
             self.locations = ["Toronto, Ontario, Canada"]
+
+        # Pagination settings
+        try:
+            self.max_pages = int(os.getenv("MAX_PAGES") or 5)
+        except ValueError:
+            self.max_pages = 5

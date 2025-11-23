@@ -13,8 +13,8 @@ def main():
         return
 
     # Initialize JobFinder
-    finder = JobFinder(config.api_key)
-    print("JobFinder initialized.")
+    finder = JobFinder(config.api_key, max_pages=config.max_pages)
+    print(f"JobFinder initialized with max_pages={config.max_pages}.")
     
     all_jobs = []
     
@@ -29,7 +29,9 @@ def main():
         print(f"Found {len(jobs)} jobs in {location}.")
         all_jobs.extend(jobs)
     
-    print(f"Search completed. Total jobs found: {len(all_jobs)}")
+    # Deduplicate aggregated results
+    all_jobs = finder.removeDuplicates(all_jobs)
+    print(f"Search completed. Total unique jobs found: {len(all_jobs)}")
     
     # Save results
     print("Saving results...")
