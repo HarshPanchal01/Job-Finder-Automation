@@ -79,6 +79,9 @@ class JobFinder:
                 seen.add(key)
                 unique.append(job)
 
-        print(f"{len(seen)} duplicates found.")
+        # Calculate duplicates as the difference between the original
+        # number of jobs and the number of unique jobs found.
+        duplicates = len(jobs) - len(unique)
+        print(f"{duplicates} duplicates found.")
         print(f"Results after removing duplicates: {len(unique)}")
         return unique
