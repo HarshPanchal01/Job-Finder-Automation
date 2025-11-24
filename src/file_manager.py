@@ -15,28 +15,29 @@ class FileManager:
     @staticmethod
     def save_markdown(jobs, filename):
         """
-        Saves the parsed job data to a Markdown file.
+        Saves the parsed job data to a Markdown file, grouped by search location.
         """
         print(f"Saving Markdown data to {filename}...")
         
-        # Group jobs by search location
+        # Group jobs by search_location
         jobs_by_location = {}
         for job in jobs:
             parsed_job = JobParser.parse_job(job)
-            search_loc = parsed_job.get('search_location', 'Unknown Location')
-            if search_loc not in jobs_by_location:
-                jobs_by_location[search_loc] = []
-            jobs_by_location[search_loc].append(parsed_job)
-
+            # Use 'Unknown Location' if search_location is missing
+            loc = parsed_job.get('search_location', 'Unknown Location')
+            if loc not in jobs_by_location:
+                jobs_by_location[loc] = []
+            jobs_by_location[loc].append(parsed_job)
+            
         with open(filename, 'w', encoding="utf-8") as f:
-            f.write("## Weekly Job Search Results\n\n")
+            f.write("# Weekly Job Search Results\n\n")
             
             if not jobs:
                 f.write("No jobs found this week.\n")
             else:
-                for location, location_jobs in jobs_by_location.items():
-                    f.write(f"### Jobs in {location}\n\n")
-                    for job in location_jobs:
+                for location in sorted(jobs_by_location.keys()):
+                    f.write(f"## Jobs in {location}\n\n")
+                    for job in jobs_by_location[location]:
                         title = job['title']
                         company = job['company']
                         job_location = job['location']

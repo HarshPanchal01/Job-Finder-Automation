@@ -6,14 +6,15 @@ The goal of this repository is to fetch jobs from linkedin, glassdoor, indeed, b
 
 You can configure the job search parameters using environment variables. This works for both local development (using a `.env` file) and GitHub Actions (using Repository Variables/Secrets).
 
-| Variable        | Description                         | Default                        |
-| --------------- | ----------------------------------- | ------------------------------ |
-| `API_KEY`       | **Required**. Your SerpApi API Key. | None                           |
-| `SEARCH_QUERY`  | The search query for jobs.          | `new grad 2026 tech`           |
-| `LOCATIONS`     | JSON array of locations.            | `["Toronto, Ontario, Canada"]` |
-| `GOOGLE_DOMAIN` | The Google domain to use.           | `google.ca`                    |
-| `GL`            | Country code for search results.    | `ca`                           |
-| `HL`            | Language code for search results.   | `en`                           |
+| Variable        | Description                                                                 | Default                    |
+| --------------- | --------------------------------------------------------------------------- | -------------------------- |
+| `API_KEY`       | **Required**. Your SerpApi API Key.                                         | None                       |
+| `SEARCH_QUERY`  | The search query for jobs.                                                  | `software developer`       |
+| `LOCATIONS`     | A JSON list of locations or a single string. e.g. `["Toronto", "New York"]` | `Toronto, Ontario, Canada` |
+| `MAX_PAGES`     | Maximum number of pages to fetch per location.                              | `5`                        |
+| `GOOGLE_DOMAIN` | The Google domain to use.                                                   | `google.ca`                |
+| `GL`            | Country code for search results.                                            | `ca`                       |
+| `HL`            | Language code for search results.                                           | `en`                       |
 
 ### Local Development
 
@@ -22,7 +23,8 @@ You can configure the job search parameters using environment variables. This wo
    ```env
    API_KEY=your_api_key_here
    SEARCH_QUERY="software engineer intern"
-   LOCATIONS='["Toronto, Ontario, Canada", "Vancouver, British Columbia, Canada"]'
+   LOCATIONS=["San Francisco, CA", "New York, NY"]
+   MAX_PAGES=3
    ```
 
 ### GitHub Actions
@@ -30,3 +32,4 @@ You can configure the job search parameters using environment variables. This wo
 1. Go to your repository settings -> **Secrets and variables** -> **Actions**.
 2. Add `API_KEY` as a **Repository Secret**.
 3. Add other parameters (e.g., `SEARCH_QUERY`, `LOCATIONS`) as **Repository Variables**.
+   - For `LOCATIONS`, you can enter a JSON array like `["City A", "City B"]`.

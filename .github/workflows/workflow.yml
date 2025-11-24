@@ -8,7 +8,11 @@ on:
         required: false
         type: string
       locations:
-        description: "Locations (comma-separated)"
+        description: "Locations (JSON list or single string)"
+        required: false
+        type: string
+      max_pages:
+        description: "Max Pages per Location"
         required: false
         type: string
       google_domain:
@@ -51,15 +55,22 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
           SEARCH_QUERY: ${{ inputs.search_query || vars.SEARCH_QUERY }}
           LOCATIONS: ${{ inputs.locations || vars.LOCATIONS }}
+          MAX_PAGES: ${{ inputs.max_pages || vars.MAX_PAGES }}
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
         run: python src/main.py
 
       - name: Create GitHub Issue
+        id: create-issue
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: Weekly Job Search Results
           content-filepath: ./jobs.md
           labels: Automation-Email
           assignees: HarshPanchal01, anmolp476
+
+      - name: Close created issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh issue close ${{ steps.create-issue.outputs.issue-number }} --comment "Closing automatically to keep issue tracker clean."
