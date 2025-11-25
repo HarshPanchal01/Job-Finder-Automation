@@ -5,3 +5,4 @@ jobs.md
 playbook.yml
 __pycache__
 .pytest_cache
+data/

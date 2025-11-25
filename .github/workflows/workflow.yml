@@ -32,6 +32,7 @@ on:
 
 permissions:
   issues: write
+  contents: write
 
 jobs:
   run-script:
@@ -50,6 +51,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Fetch History
+        continue-on-error: true
+        run: |
+          # Try to fetch the history file from the orphan branch
+          git fetch origin job-history-data:job-history-data
+          git checkout job-history-data -- data/history.json
+
       - name: Run script
         env:
           API_KEY: ${{ secrets.API_KEY }}
@@ -60,6 +68,36 @@ jobs:
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
         run: python src/main.py
+
+      - name: Commit and Push History
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # Save the new history file to a temp location
+          cp data/history.json /tmp/history.json
+
+          # Switch to the data branch (create if it doesn't exist)
+          if git rev-parse --verify job-history-data; then
+            git checkout job-history-data
+            git pull origin job-history-data || echo "Branch might be new"
+          else
+            git checkout --orphan job-history-data
+            git rm -rf .
+          fi
+
+          # Restore the file
+          mkdir -p data
+          cp /tmp/history.json data/history.json
+
+          # Commit and push
+          git add data/history.json
+          if git diff --staged --quiet; then
+            echo "No changes to history."
+          else
+            git commit -m "Update job history [skip ci]"
+            git push origin job-history-data
+          fi
 
       - name: Create GitHub Issue
         id: create-issue
