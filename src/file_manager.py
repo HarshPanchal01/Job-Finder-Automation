@@ -1,4 +1,5 @@
 import json
+import logging
 from job_parser import JobParser
 
 class FileManager:
@@ -7,17 +8,17 @@ class FileManager:
         """
         Saves the raw data to a JSON file.
         """
-        print(f"Saving JSON data to {filename}...")
+        logging.info(f"Saving JSON data to {filename}...")
         with open(filename, 'w') as f:
             json.dump(data, f, indent=2)
-        print(f"Job results saved to {filename}")
+        logging.info(f"Job results saved to {filename}")
 
     @staticmethod
     def save_markdown(jobs, filename):
         """
         Saves the parsed job data to a Markdown file, grouped by search location.
         """
-        print(f"Saving Markdown data to {filename}...")
+        logging.info(f"Saving Markdown data to {filename}...")
         
         # Group jobs by search_location
         jobs_by_location = {}
@@ -50,4 +51,4 @@ class FileManager:
                             f.write(f"  - **Apply:** [Link]({link})\n")
                         f.write("\n")
         
-        print(f"Job results summary saved to {filename}")
+        logging.info(f"Job results summary saved to {filename}")

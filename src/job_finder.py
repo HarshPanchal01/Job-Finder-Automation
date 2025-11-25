@@ -1,3 +1,4 @@
+import logging
 from serpapi import GoogleSearch
 
 class JobFinder:
@@ -5,13 +6,13 @@ class JobFinder:
         self.api_key = api_key
         self.max_pages = max_pages
         self.results_per_page = results_per_page
-        print("JobFinder instance created.")
+        logging.info("JobFinder instance created.")
 
     def search_jobs(self, params):
         """
         Executes the job search using SerpApi.
         """
-        print(f"Executing search with params: {params}")
+        logging.info(f"Executing search with params: {params}")
 
         all_res = []
         next_page_token = None
@@ -23,23 +24,23 @@ class JobFinder:
         for page in range(self.max_pages):
             if next_page_token:
                 search_params["next_page_token"] = next_page_token
-                print(f"Fetching next page with token.")
+                logging.info(f"Fetching next page with token.")
             else:
-                print("Fetching first page of results.")
+                logging.info("Fetching first page of results.")
 
             search = GoogleSearch(search_params)
             results = search.get_dict()
 
             if "error" in results:
-                print(f"Error from API: {results['error']}")
+                logging.error(f"Error from API: {results['error']}")
                 break
 
             page_results = results.get("jobs_results", [])
 
-            print(f"Page {page + 1} returned {len(page_results)} jobs.")
+            logging.info(f"Page {page + 1} returned {len(page_results)} jobs.")
 
             if not page_results:
-                print("No more results found, stopping search.")
+                logging.info("No more results found, stopping search.")
                 break
 
             all_res.extend(page_results)
@@ -47,13 +48,13 @@ class JobFinder:
             next_page_token = results.get("serpapi_pagination", {}).get("next_page_token")
 
             if not next_page_token:
-                print("No next page token found, ending pagination.")
+                logging.info("No next page token found, ending pagination.")
                 break
         
         # Debugging: Print what keys are returned
-        print(f"DEBUG: Keys returned from API: {list(results.keys())}")
+        logging.debug(f"DEBUG: Keys returned from API: {list(results.keys())}")
         if "error" in results:
-            print(f"DEBUG: API Error: {results['error']}")
+            logging.debug(f"DEBUG: API Error: {results['error']}")
         
         # Inject search location into each job result
         search_location = params.get("location", "Unknown")
@@ -82,6 +83,6 @@ class JobFinder:
         # Calculate duplicates as the difference between the original
         # number of jobs and the number of unique jobs found.
         duplicates = len(jobs) - len(unique)
-        print(f"{duplicates} duplicates found.")
-        print(f"Results after removing duplicates: {len(unique)}")
+        logging.info(f"{duplicates} duplicates found.")
+        logging.info(f"Results after removing duplicates: {len(unique)}")
         return unique
