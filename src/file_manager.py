@@ -44,9 +44,11 @@ class FileManager:
                         job_location = job['location']
                         posted_date = job['posted_date']
                         link = job['link']
+                        salary = job.get('salary_raw', 'N/A')
 
                         f.write(f"- **{title}** at `{company}` ({job_location})\n")
                         f.write(f"  - **Posted:** {posted_date}\n")
+                        f.write(f"  - **Salary:** {salary}\n")
                         if link:
                             f.write(f"  - **Apply:** [Link]({link})\n")
                         f.write("\n")

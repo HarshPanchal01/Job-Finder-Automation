@@ -12,6 +12,7 @@ You can configure the job search parameters using environment variables. This wo
 | `SEARCH_QUERY`  | The search query for jobs.                                                                                            | `software developer`       |
 | `LOCATIONS`     | A JSON list of locations or a single string. e.g. `["Toronto, Ontario, Canada", "New York, New York, United States"]` | `Toronto, Ontario, Canada` |
 | `MAX_PAGES`     | Maximum number of pages to fetch per location.                                                                        | `5`                        |
+| `MIN_SALARY`    | Minimum annual salary to filter jobs. Jobs with unknown salary are kept.                                              | `0`                        |
 | `GOOGLE_DOMAIN` | The Google domain to use.                                                                                             | `google.ca`                |
 | `GL`            | Country code for search results.                                                                                      | `ca`                       |
 | `HL`            | Language code for search results.                                                                                     | `en`                       |

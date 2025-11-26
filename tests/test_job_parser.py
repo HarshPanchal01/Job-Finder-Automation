@@ -49,13 +49,27 @@ def test_parse_job_posted_date_extraction():
     assert parsed["posted_date"] == "3 days ago"
     logging.info("parse_job posted date extraction test passed.")
 
-def test_parse_job_no_posted_date():
-    """Test when no date-like string is in extensions."""
-    logging.info("Testing parse_job with no posted date...")
+def test_parse_job_salary_extraction():
+    """Test extraction of salary from extensions."""
+    logging.info("Testing parse_job salary extraction...")
     raw_job = {
-        "extensions": ["Full-time", "Apply on site"]
+        "extensions": ["Full-time", "$100k - $120k a year"]
     }
     
     parsed = JobParser.parse_job(raw_job)
-    assert parsed["posted_date"] == "N/A"
-    logging.info("parse_job no posted date test passed.")
+    assert parsed["min_salary"] == 100000
+    assert parsed["max_salary"] == 120000
+    assert parsed["salary_raw"] == "$100k - $120k a year"
+    logging.info("parse_job salary extraction test passed.")
+
+def test_parse_job_detected_extensions_salary():
+    """Test extraction of salary from detected_extensions."""
+    logging.info("Testing parse_job detected_extensions salary...")
+    raw_job = {
+        "detected_extensions": {"salary": "$50/hr"}
+    }
+    
+    parsed = JobParser.parse_job(raw_job)
+    assert parsed["min_salary"] == 104000
+    assert parsed["max_salary"] == 104000
+    logging.info("parse_job detected_extensions salary test passed.")
