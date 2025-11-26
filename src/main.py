@@ -3,6 +3,7 @@ from config import Config
 from job_finder import JobFinder
 from file_manager import FileManager
 from job_history import JobHistory
+from job_parser import JobParser
 
 # Configure logging
 logging.basicConfig(
@@ -45,13 +46,34 @@ def main():
     logging.info(f"Total unique jobs found in this run: {len(all_jobs)}")
 
     # Filter out jobs seen in previous runs (inter-run duplicates)
+    # AND filter by salary if configured
     new_jobs = []
-    for job in all_jobs:
-        if not history.is_seen(job):
-            new_jobs.append(job)
-            history.add_job(job)
+    skipped_salary = 0
     
-    logging.info(f"Net new jobs after history check: {len(new_jobs)}")
+    for job in all_jobs:
+        # Check history first
+        if history.is_seen(job):
+            continue
+            
+        parsed_job = JobParser.parse_job(job)
+        salary_str = parsed_job.get('salary_raw', 'N/A')
+
+        # Check salary if min_salary is set
+        if config.min_salary > 0:
+            max_salary = parsed_job.get('max_salary')
+            
+            # If salary is known AND strictly less than min_salary, skip it
+            if max_salary and max_salary < config.min_salary:
+                logging.info(f"Skipping job: {parsed_job['title']} - Salary: {salary_str} (Below {config.min_salary})")
+                skipped_salary += 1
+                continue
+        
+        logging.info(f"Found job: {parsed_job['title']} - Salary: {salary_str}")
+        new_jobs.append(job)
+        history.add_job(job)
+    
+    logging.info(f"Skipped {skipped_salary} jobs due to low salary.")
+    logging.info(f"Net new jobs after history and salary check: {len(new_jobs)}")
     
     # Save results
     logging.info("Saving results...")

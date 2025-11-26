@@ -37,3 +37,9 @@ class Config:
             self.max_pages = int(os.getenv("MAX_PAGES") or 5)
         except ValueError:
             self.max_pages = 5
+
+        # Salary filtering
+        try:
+            self.min_salary = int(os.getenv("MIN_SALARY") or 0)
+        except ValueError:
+            self.min_salary = 0

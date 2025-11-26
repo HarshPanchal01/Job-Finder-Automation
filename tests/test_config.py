@@ -22,6 +22,7 @@ def test_config_defaults(mock_env):
     assert config.search_params["q"] == "software developer"
     assert config.locations == ["Toronto, Ontario, Canada"]
     assert config.max_pages == 5
+    assert config.min_salary == 0
     logging.info("Config defaults test passed.")
 
 def test_config_env_vars(mock_env):
@@ -32,7 +33,8 @@ def test_config_env_vars(mock_env):
         "GOOGLE_DOMAIN": "google.com",
         "SEARCH_QUERY": "python developer",
         "LOCATIONS": '["New York, New York, United States", "San Francisco, California, United States"]',
-        "MAX_PAGES": "3"
+        "MAX_PAGES": "3",
+        "MIN_SALARY": "80000"
     }):
         config = Config()
         assert config.api_key == "test_key"
@@ -40,6 +42,7 @@ def test_config_env_vars(mock_env):
         assert config.search_params["q"] == "python developer"
         assert config.locations == ["New York, New York, United States", "San Francisco, California, United States"]
         assert config.max_pages == 3
+        assert config.min_salary == 80000
     logging.info("Config environment variables test passed.")
 
 def test_config_locations_single_string(mock_env):

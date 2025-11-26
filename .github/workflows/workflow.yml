@@ -15,6 +15,10 @@ on:
         description: "Max Pages per Location"
         required: false
         type: string
+      min_salary:
+        description: "Minimum Salary"
+        required: false
+        type: string
       google_domain:
         description: "Google Domain"
         required: false
@@ -64,10 +68,20 @@ jobs:
           SEARCH_QUERY: ${{ inputs.search_query || vars.SEARCH_QUERY }}
           LOCATIONS: ${{ inputs.locations || vars.LOCATIONS }}
           MAX_PAGES: ${{ inputs.max_pages || vars.MAX_PAGES }}
+          MIN_SALARY: ${{ inputs.min_salary || vars.MIN_SALARY }}
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
-        run: python src/main.py
+        run: |
+          echo "Running with the following configuration:"
+          echo "SEARCH_QUERY: $SEARCH_QUERY"
+          echo "LOCATIONS: $LOCATIONS"
+          echo "MAX_PAGES: $MAX_PAGES"
+          echo "MIN_SALARY: $MIN_SALARY"
+          echo "GOOGLE_DOMAIN: $GOOGLE_DOMAIN"
+          echo "GL: $GL"
+          echo "HL: $HL"
+          python src/main.py
 
       - name: Commit and Push History
         run: |
