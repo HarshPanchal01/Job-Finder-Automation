@@ -1,5 +1,6 @@
 import logging
 from salary_parser import SalaryParser
+from date_parser import DateParser
 
 class JobParser:
     @staticmethod
@@ -15,6 +16,7 @@ class JobParser:
         search_location = job_data.get('search_location', 'N/A')
         
         posted_date = "N/A"
+        days_ago = None
         salary_info = None
         salary_raw = "N/A"
         
@@ -22,6 +24,7 @@ class JobParser:
             for item in job_data['extensions']:
                 if 'ago' in item or 'day' in item:
                     posted_date = item
+                    days_ago = DateParser.parse_days_ago(item)
                 elif SalaryParser.is_salary_text(item):
                     salary_info = SalaryParser.parse_salary(item)
                     salary_raw = item
@@ -32,6 +35,9 @@ class JobParser:
             if 'salary' in exts:
                 salary_info = SalaryParser.parse_salary(exts['salary'])
                 salary_raw = exts['salary']
+            if 'posted_at' in exts and posted_date == "N/A":
+                posted_date = exts['posted_at']
+                days_ago = DateParser.parse_days_ago(posted_date)
 
         min_salary = salary_info[0] if salary_info else None
         max_salary = salary_info[1] if salary_info else None
@@ -42,6 +48,7 @@ class JobParser:
             "location": location,
             "link": link,
             "posted_date": posted_date,
+            "days_ago": days_ago,
             "search_location": search_location,
             "min_salary": min_salary,
             "max_salary": max_salary,

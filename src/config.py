@@ -43,3 +43,9 @@ class Config:
             self.min_salary = int(os.getenv("MIN_SALARY") or 0)
         except ValueError:
             self.min_salary = 0
+
+        # Date filtering
+        try:
+            self.max_days_old = int(os.getenv("MAX_DAYS_OLD") or 7)
+        except ValueError:
+            self.max_days_old = 7
