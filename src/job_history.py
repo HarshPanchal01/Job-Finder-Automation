@@ -59,7 +59,7 @@ class JobHistory:
         job_id = self._generate_id(job)
         self.history[job_id] = datetime.now().isoformat()
 
-    def cleanup_old_entries(self, days=90):
+    def cleanup_old_entries(self, days=45):
         """Remove entries older than the specified number of days."""
         cutoff_date = datetime.now() - timedelta(days=days)
         initial_count = len(self.history)

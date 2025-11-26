@@ -6,6 +6,7 @@ class JobFinder:
         self.api_key = api_key
         self.max_pages = max_pages
         self.results_per_page = results_per_page
+        self.total_api_calls = 0
         logging.info("JobFinder instance created.")
 
     def search_jobs(self, params):
@@ -29,7 +30,9 @@ class JobFinder:
                 logging.info("Fetching first page of results.")
 
             search = GoogleSearch(search_params)
+            logging.info("Sending request to SerpApi...")
             results = search.get_dict()
+            self.total_api_calls += 1
 
             if "error" in results:
                 logging.error(f"Error from API: {results['error']}")

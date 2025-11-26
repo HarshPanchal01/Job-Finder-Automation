@@ -19,6 +19,10 @@ on:
         description: "Minimum Salary"
         required: false
         type: string
+      max_days_old:
+        description: "Max Days Old"
+        required: false
+        type: string
       google_domain:
         description: "Google Domain"
         required: false
@@ -69,6 +73,7 @@ jobs:
           LOCATIONS: ${{ inputs.locations || vars.LOCATIONS }}
           MAX_PAGES: ${{ inputs.max_pages || vars.MAX_PAGES }}
           MIN_SALARY: ${{ inputs.min_salary || vars.MIN_SALARY }}
+          MAX_DAYS_OLD: ${{ inputs.max_days_old || vars.MAX_DAYS_OLD }}
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
@@ -78,6 +83,7 @@ jobs:
           echo "LOCATIONS: $LOCATIONS"
           echo "MAX_PAGES: $MAX_PAGES"
           echo "MIN_SALARY: $MIN_SALARY"
+          echo "MAX_DAYS_OLD: $MAX_DAYS_OLD"
           echo "GOOGLE_DOMAIN: $GOOGLE_DOMAIN"
           echo "GL: $GL"
           echo "HL: $HL"
@@ -109,7 +115,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to history."
           else
-            git commit -m "Update job history [skip ci]"
+            git commit -m "Update job history"
             git push origin job-history-data
           fi
 

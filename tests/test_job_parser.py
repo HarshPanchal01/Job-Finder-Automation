@@ -47,6 +47,7 @@ def test_parse_job_posted_date_extraction():
     
     parsed = JobParser.parse_job(raw_job)
     assert parsed["posted_date"] == "3 days ago"
+    assert parsed["days_ago"] == 3
     logging.info("parse_job posted date extraction test passed.")
 
 def test_parse_job_salary_extraction():

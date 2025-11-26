@@ -47,16 +47,27 @@ def main():
 
     # Filter out jobs seen in previous runs (inter-run duplicates)
     # AND filter by salary if configured
+    # AND filter by date if configured
     new_jobs = []
     skipped_salary = 0
+    skipped_date = 0
+    skipped_history = 0
     
     for job in all_jobs:
         # Check history first
         if history.is_seen(job):
+            skipped_history += 1
             continue
             
         parsed_job = JobParser.parse_job(job)
         salary_str = parsed_job.get('salary_raw', 'N/A')
+        days_ago = parsed_job.get('days_ago')
+
+        # Check date if max_days_old is set
+        if days_ago is not None and days_ago > config.max_days_old:
+            logging.info(f"Skipping job: {parsed_job['title']} - Posted: {parsed_job['posted_date']} (Older than {config.max_days_old} days)")
+            skipped_date += 1
+            continue
 
         # Check salary if min_salary is set
         if config.min_salary > 0:
@@ -68,12 +79,14 @@ def main():
                 skipped_salary += 1
                 continue
         
-        logging.info(f"Found job: {parsed_job['title']} - Salary: {salary_str}")
+        logging.info(f"Found job: {parsed_job['title']} - Salary: {salary_str} - Posted: {parsed_job['posted_date']}")
         new_jobs.append(job)
         history.add_job(job)
     
+    logging.info(f"Skipped {skipped_history} jobs due to history (already seen).")
     logging.info(f"Skipped {skipped_salary} jobs due to low salary.")
-    logging.info(f"Net new jobs after history and salary check: {len(new_jobs)}")
+    logging.info(f"Skipped {skipped_date} jobs due to age.")
+    logging.info(f"Net new jobs after history, salary, and date check: {len(new_jobs)}")
     
     # Save results
     logging.info("Saving results...")
@@ -84,6 +97,7 @@ def main():
     history.save_history()
     history.cleanup_old_entries()
     
+    logging.info(f"Total SerpApi calls made in this session: {finder.total_api_calls}")
     logging.info("Automation completed successfully.")
 
 if __name__ == "__main__":
