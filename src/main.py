@@ -4,6 +4,7 @@ from job_finder import JobFinder
 from file_manager import FileManager
 from job_history import JobHistory
 from job_parser import JobParser
+from job_filter import JobFilter
 
 # Configure logging
 logging.basicConfig(
@@ -27,6 +28,7 @@ def main():
     # Initialize JobFinder and JobHistory
     finder = JobFinder(config.api_key, max_pages=config.max_pages)
     history = JobHistory()
+    job_filter = JobFilter(config)
     logging.info(f"JobFinder initialized with max_pages={config.max_pages}.")
     
     all_jobs = []
@@ -48,10 +50,12 @@ def main():
     # Filter out jobs seen in previous runs (inter-run duplicates)
     # AND filter by salary if configured
     # AND filter by date if configured
+    # AND filter by blacklist/keywords
     new_jobs = []
     skipped_salary = 0
     skipped_date = 0
     skipped_history = 0
+    skipped_filter = 0
     
     for job in all_jobs:
         # Check history first
@@ -59,6 +63,13 @@ def main():
             skipped_history += 1
             continue
             
+        # Check blacklist and keywords
+        is_valid, reason = job_filter.is_valid(job)
+        if not is_valid:
+            logging.info(f"Skipping job: {reason}")
+            skipped_filter += 1
+            continue
+
         parsed_job = JobParser.parse_job(job)
         salary_str = parsed_job.get('salary_raw', 'N/A')
         days_ago = parsed_job.get('days_ago')
@@ -84,6 +95,7 @@ def main():
         history.add_job(job)
     
     logging.info(f"Skipped {skipped_history} jobs due to history (already seen).")
+    logging.info(f"Skipped {skipped_filter} jobs due to blacklist/keywords.")
     logging.info(f"Skipped {skipped_salary} jobs due to low salary.")
     logging.info(f"Skipped {skipped_date} jobs due to age.")
     logging.info(f"Net new jobs after history, salary, and date check: {len(new_jobs)}")

@@ -49,3 +49,20 @@ class Config:
             self.max_days_old = int(os.getenv("MAX_DAYS_OLD") or 7)
         except ValueError:
             self.max_days_old = 7
+
+        # Blacklist and Keywords
+        self.blacklist_companies = self._parse_list(os.getenv("BLACKLIST_COMPANIES"))
+        self.exclude_keywords = self._parse_list(os.getenv("EXCLUDE_KEYWORDS"))
+
+    def _parse_list(self, env_str):
+        """Parses a JSON list string or comma-separated string into a list."""
+        if not env_str:
+            return []
+        try:
+            parsed = json.loads(env_str)
+            if isinstance(parsed, list):
+                return [str(item) for item in parsed]
+            return [str(parsed)]
+        except json.JSONDecodeError:
+            # Fallback: comma-separated
+            return [item.strip() for item in env_str.split(',') if item.strip()]
