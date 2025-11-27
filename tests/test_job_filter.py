@@ -7,6 +7,7 @@ def mock_config():
     config = Mock()
     config.blacklist_companies = ["bad company", "spam corp"]
     config.exclude_keywords = ["senior", "intern"]
+    config.schedule_types = ["full-time"]
     return config
 
 def test_job_filter_valid_job(mock_config):

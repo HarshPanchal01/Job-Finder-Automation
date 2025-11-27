@@ -11,7 +11,6 @@ class Config:
         self.search_params = {
             "engine": "google_jobs",
             "google_domain": os.getenv("GOOGLE_DOMAIN") or "google.ca",
-            "q": os.getenv("SEARCH_QUERY") or "software developer",
             "gl": os.getenv("GL") or "ca",
             "hl": os.getenv("HL") or "en",
         }
@@ -31,6 +30,14 @@ class Config:
         else:
             # Default to a single location if LOCATIONS is not set, but treat it as a list
             self.locations = ["Toronto, Ontario, Canada"]
+
+        # Handle multiple queries
+        queries_str = os.getenv("SEARCH_QUERIES")
+        if queries_str:
+            self.queries = self._parse_list(queries_str)
+        else:
+            # Default if SEARCH_QUERIES is not set
+            self.queries = ["software developer"]
 
         # Pagination settings
         try:
@@ -53,6 +60,14 @@ class Config:
         # Blacklist and Keywords
         self.blacklist_companies = self._parse_list(os.getenv("BLACKLIST_COMPANIES"))
         self.exclude_keywords = self._parse_list(os.getenv("EXCLUDE_KEYWORDS"))
+
+        # Schedule Types
+        schedule_types_str = os.getenv("SCHEDULE_TYPES")
+        if schedule_types_str:
+            self.schedule_types = self._parse_list(schedule_types_str)
+        else:
+            # Default to Full-time if not specified
+            self.schedule_types = ["full-time"]
 
     def _parse_list(self, env_str):
         """Parses a JSON list string or comma-separated string into a list."""

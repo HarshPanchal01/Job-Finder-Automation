@@ -19,13 +19,16 @@ def test_config_defaults(mock_env):
     config = Config()
     assert config.api_key is None
     assert config.search_params["google_domain"] == "google.ca"
-    assert config.search_params["q"] == "software developer"
+    # q is no longer set by default in search_params, it's built dynamically
+    assert "q" not in config.search_params or config.search_params["q"] is None
     assert config.locations == ["Toronto, Ontario, Canada"]
     assert config.max_pages == 5
     assert config.min_salary == 0
     assert config.max_days_old == 7
     assert config.blacklist_companies == []
     assert config.exclude_keywords == []
+    assert config.schedule_types == ["full-time"]
+    assert config.queries == ["software developer"]
     logging.info("Config defaults test passed.")
 
 def test_config_env_vars(mock_env):
@@ -34,24 +37,26 @@ def test_config_env_vars(mock_env):
     with patch.dict(os.environ, {
         "API_KEY": "test_key",
         "GOOGLE_DOMAIN": "google.com",
-        "SEARCH_QUERY": "python developer",
+        "SEARCH_QUERIES": '["data scientist", "machine learning engineer"]',
         "LOCATIONS": '["New York, New York, United States", "San Francisco, California, United States"]',
         "MAX_PAGES": "3",
         "MIN_SALARY": "80000",
         "MAX_DAYS_OLD": "14",
         "BLACKLIST_COMPANIES": '["Bad Corp", "Spam Inc"]',
-        "EXCLUDE_KEYWORDS": '["Senior", "Lead"]'
+        "EXCLUDE_KEYWORDS": '["Senior", "Lead"]',
+        "SCHEDULE_TYPES": '["Part-time", "Contract"]'
     }):
         config = Config()
         assert config.api_key == "test_key"
         assert config.search_params["google_domain"] == "google.com"
-        assert config.search_params["q"] == "python developer"
+        assert config.queries == ["data scientist", "machine learning engineer"]
         assert config.locations == ["New York, New York, United States", "San Francisco, California, United States"]
         assert config.max_pages == 3
         assert config.min_salary == 80000
         assert config.max_days_old == 14
         assert config.blacklist_companies == ["Bad Corp", "Spam Inc"]
         assert config.exclude_keywords == ["Senior", "Lead"]
+        assert config.schedule_types == ["Part-time", "Contract"]
     logging.info("Config environment variables test passed.")
 
 def test_config_locations_single_string(mock_env):

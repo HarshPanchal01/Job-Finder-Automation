@@ -5,6 +5,7 @@ from file_manager import FileManager
 from job_history import JobHistory
 from job_parser import JobParser
 from job_filter import JobFilter
+from utils import format_location_for_query
 
 # Configure logging
 logging.basicConfig(
@@ -33,15 +34,22 @@ def main():
     
     all_jobs = []
     
-    for location in config.locations:
-        logging.info(f"Searching for jobs in {location}...")
-        # Execute search
-        search_params = config.search_params.copy()
-        search_params["location"] = location
-        
-        jobs = finder.search_jobs(search_params)
-        logging.info(f"Found {len(jobs)} jobs in {location}.")
-        all_jobs.extend(jobs)
+    for query in config.queries:
+        for location in config.locations:
+            logging.info(f"Searching for '{query}' in {location}...")
+            # Execute search
+            search_params = config.search_params.copy()
+            
+            # Format location for query (e.g. "Toronto, ON")
+            short_location = format_location_for_query(location)
+            
+            # Update query to include "near location" for better results
+            search_params["q"] = f"{query} near {short_location}"
+            search_params["location"] = location
+            
+            jobs = finder.search_jobs(search_params)
+            logging.info(f"Found {len(jobs)} jobs for '{query}' in {location} (using '{short_location}').")
+            all_jobs.extend(jobs)
     
     # Deduplicate aggregated results (intra-run duplicates)
     all_jobs = finder.removeDuplicates(all_jobs)
