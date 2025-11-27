@@ -23,6 +23,14 @@ on:
         description: "Max Days Old"
         required: false
         type: string
+      blacklist_companies:
+        description: "Blacklist Companies (JSON list or comma-separated)"
+        required: false
+        type: string
+      exclude_keywords:
+        description: "Exclude Keywords (JSON list or comma-separated)"
+        required: false
+        type: string
       google_domain:
         description: "Google Domain"
         required: false
@@ -74,6 +82,8 @@ jobs:
           MAX_PAGES: ${{ inputs.max_pages || vars.MAX_PAGES }}
           MIN_SALARY: ${{ inputs.min_salary || vars.MIN_SALARY }}
           MAX_DAYS_OLD: ${{ inputs.max_days_old || vars.MAX_DAYS_OLD }}
+          BLACKLIST_COMPANIES: ${{ inputs.blacklist_companies || vars.BLACKLIST_COMPANIES }}
+          EXCLUDE_KEYWORDS: ${{ inputs.exclude_keywords || vars.EXCLUDE_KEYWORDS }}
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
@@ -84,10 +94,18 @@ jobs:
           echo "MAX_PAGES: $MAX_PAGES"
           echo "MIN_SALARY: $MIN_SALARY"
           echo "MAX_DAYS_OLD: $MAX_DAYS_OLD"
+          echo "BLACKLIST_COMPANIES: $BLACKLIST_COMPANIES"
+          echo "EXCLUDE_KEYWORDS: $EXCLUDE_KEYWORDS"
           echo "GOOGLE_DOMAIN: $GOOGLE_DOMAIN"
           echo "GL: $GL"
           echo "HL: $HL"
           python src/main.py
+
+      - name: Upload jobs.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: jobs-json
+          path: jobs.json
 
       - name: Commit and Push History
         run: |
