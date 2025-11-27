@@ -3,8 +3,8 @@ name: Job Finder Automation
 on:
   workflow_dispatch:
     inputs:
-      search_query:
-        description: "Search Query"
+      search_queries:
+        description: "Search Queries (JSON list or comma-separated)"
         required: false
         type: string
       locations:
@@ -29,6 +29,10 @@ on:
         type: string
       exclude_keywords:
         description: "Exclude Keywords (JSON list or comma-separated)"
+        required: false
+        type: string
+      schedule_types:
+        description: "Schedule Types (JSON list or comma-separated)"
         required: false
         type: string
       google_domain:
@@ -77,28 +81,18 @@ jobs:
       - name: Run script
         env:
           API_KEY: ${{ secrets.API_KEY }}
-          SEARCH_QUERY: ${{ inputs.search_query || vars.SEARCH_QUERY }}
+          SEARCH_QUERIES: ${{ inputs.search_queries || vars.SEARCH_QUERIES }}
           LOCATIONS: ${{ inputs.locations || vars.LOCATIONS }}
           MAX_PAGES: ${{ inputs.max_pages || vars.MAX_PAGES }}
           MIN_SALARY: ${{ inputs.min_salary || vars.MIN_SALARY }}
           MAX_DAYS_OLD: ${{ inputs.max_days_old || vars.MAX_DAYS_OLD }}
           BLACKLIST_COMPANIES: ${{ inputs.blacklist_companies || vars.BLACKLIST_COMPANIES }}
           EXCLUDE_KEYWORDS: ${{ inputs.exclude_keywords || vars.EXCLUDE_KEYWORDS }}
+          SCHEDULE_TYPES: ${{ inputs.schedule_types || vars.SCHEDULE_TYPES }}
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
         run: |
-          echo "Running with the following configuration:"
-          echo "SEARCH_QUERY: $SEARCH_QUERY"
-          echo "LOCATIONS: $LOCATIONS"
-          echo "MAX_PAGES: $MAX_PAGES"
-          echo "MIN_SALARY: $MIN_SALARY"
-          echo "MAX_DAYS_OLD: $MAX_DAYS_OLD"
-          echo "BLACKLIST_COMPANIES: $BLACKLIST_COMPANIES"
-          echo "EXCLUDE_KEYWORDS: $EXCLUDE_KEYWORDS"
-          echo "GOOGLE_DOMAIN: $GOOGLE_DOMAIN"
-          echo "GL: $GL"
-          echo "HL: $HL"
           python src/main.py
 
       - name: Upload jobs.json
