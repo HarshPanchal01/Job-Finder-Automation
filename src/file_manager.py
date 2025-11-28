@@ -17,6 +17,7 @@ class FileManager:
     def save_markdown(jobs, filename):
         """
         Saves the parsed job data to a Markdown file, grouped by search location.
+        Includes a summary table and collapsible sections.
         """
         logging.info(f"Saving Markdown data to {filename}...")
         
@@ -35,22 +36,50 @@ class FileManager:
             
             if not jobs:
                 f.write("No jobs found this week.\n")
-            else:
-                for location in sorted(jobs_by_location.keys()):
-                    f.write(f"## Jobs in {location}\n\n")
-                    for job in jobs_by_location[location]:
-                        title = job['title']
-                        company = job['company']
-                        job_location = job['location']
-                        posted_date = job['posted_date']
-                        link = job['link']
-                        salary = job.get('salary_raw', 'N/A')
+                logging.info(f"Job results summary saved to {filename}")
+                return
 
-                        f.write(f"- **{title}** at `{company}` ({job_location})\n")
-                        f.write(f"  - **Posted:** {posted_date}\n")
-                        f.write(f"  - **Salary:** {salary}\n")
-                        if link:
-                            f.write(f"  - **Apply:** [Link]({link})\n")
-                        f.write("\n")
+            # Summary Section
+            f.write("## Summary\n\n")
+            f.write(f"**Total Jobs Found:** {len(jobs)}\n\n")
+            f.write("| Location | Jobs |\n")
+            f.write("| :--- | :---: |\n")
+            for location in sorted(jobs_by_location.keys()):
+                count = len(jobs_by_location[location])
+                f.write(f"| {location} | {count} |\n")
+            f.write("\n---\n\n")
+
+            # Detailed Listings
+            for location in sorted(jobs_by_location.keys()):
+                count = len(jobs_by_location[location])
+                f.write(f"### {location} ({count})\n\n")
+                
+                # Collapsible section
+                f.write("<details>\n")
+                f.write(f"<summary>Click to view {count} jobs in {location}</summary>\n\n")
+                
+                for job in jobs_by_location[location]:
+                    title = job['title']
+                    company = job['company']
+                    job_location = job['location']
+                    posted_date = job['posted_date']
+                    link = job['link']
+                    salary = job.get('salary_raw', 'N/A')
+
+                    f.write(f"#### {title}\n")
+                    f.write(f"- **Company:** {company}\n")
+                    f.write(f"- **Location:** {job_location}\n")
+                    f.write(f"- **Posted:** {posted_date}\n")
+                    if salary != 'N/A':
+                        f.write(f"- **Salary:** **{salary}**\n")
+                    else:
+                        f.write(f"- **Salary:** {salary}\n")
+                    
+                    if link:
+                        f.write(f"- [**Apply Now**]({link})\n")
+                    
+                    f.write("\n---\n\n")
+                
+                f.write("</details>\n\n")
         
         logging.info(f"Job results summary saved to {filename}")

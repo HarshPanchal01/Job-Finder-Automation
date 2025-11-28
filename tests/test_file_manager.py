@@ -50,8 +50,10 @@ def test_save_markdown_grouping():
         written_content = "".join(call.args[0] for call in handle.write.call_args_list)
         
         assert "# Weekly Job Search Results" in written_content
-        assert "## Jobs in City X" in written_content
-        assert "## Jobs in City Y" in written_content
+        assert "## Summary" in written_content
+        assert "| City X | 1 |" in written_content
+        assert "### City X (1)" in written_content
+        assert "<details>" in written_content
         assert "Dev" in written_content
         assert "Manager" in written_content
     logging.info("save_markdown grouping test passed.")
