@@ -1,75 +1,154 @@
-# Job-Finder-Automation
+# Job Finder Automation
 
-The goal of this repository is to fetch jobs from google search based on parameters like job type, date posted, and more. The jobs should then be put into a list with their respective application links and sent through email.
+A Python-based automation tool that scrapes job listings from Google Jobs via SerpApi, filters them based on your preferences (salary, date, keywords), and generates a weekly report. It runs automatically via GitHub Actions or can be run locally using Docker or Python.
+
+## Features
+
+- **Automated Search**: Fetches jobs for multiple queries and locations.
+- **Smart Filtering**:
+  - **Salary**: Filters out jobs below a minimum salary.
+  - **Date**: Ignores jobs older than $X$ days.
+  - **Keywords**: Excludes jobs with specific keywords in the title.
+  - **Companies**: Blacklists specific companies.
+  - **Sources**: Filters for reputable sources (e.g., LinkedIn, Indeed).
+- **Deduplication**: Tracks job history to ensure you never see the same job twice.
+- **Reporting**: Generates a Markdown summary and a JSON data file.
+- **CI/CD Integration**: Runs weekly on GitHub Actions and creates a GitHub Issue with the results.
+- **Dockerized**: Consistent environment for development and deployment.
+
+---
 
 ## Configuration
 
-You can configure the job search parameters using environment variables. This works for both local development (using a `.env` file) and GitHub Actions (using Repository Variables/Secrets).
+The application is configured using environment variables.
 
-| Variable              | Description                                                                                                           | Default                               |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `API_KEY`             | **Required**. Your SerpApi API Key.                                                                                   | None                                  |
-| `SEARCH_QUERIES`      | List of search queries (JSON list or comma-separated).                                                                | `["software developer"]`              |
-| `LOCATIONS`           | A JSON list of locations or a single string. e.g. `["Toronto, Ontario, Canada", "New York, New York, United States"]` | `Toronto, Ontario, Canada`            |
-| `MAX_PAGES`           | Maximum number of pages to fetch per location.                                                                        | `5`                                   |
-| `MIN_SALARY`          | Minimum annual salary to filter jobs. Jobs with unknown salary are kept.                                              | `50000`                               |
-| `MAX_DAYS_OLD`        | Maximum age of job postings in days. Jobs older than this will be filtered out.                                       | `7`                                   |
-| `BLACKLIST_COMPANIES` | List of companies to exclude (JSON list or comma-separated).                                                          | `[]`                                  |
-| `EXCLUDE_KEYWORDS`    | List of keywords to exclude from job titles (JSON list or comma-separated).                                           | `[]`                                  |
-| `SCHEDULE_TYPES`      | List of allowed schedule types (JSON list or comma-separated). e.g. `["Full-time", "Part-time"]`                      | `["Full-time"]`                       |
-| `TRUSTED_DOMAINS`     | List of trusted domains for application sources (JSON list or comma-separated).                                       | `["linkedin", "glassdoor", "indeed"]` |
-| `GOOGLE_DOMAIN`       | The Google domain to use.                                                                                             | `google.ca`                           |
-| `GL`                  | Country code for search results.                                                                                      | `ca`                                  |
-| `HL`                  | Language code for search results.                                                                                     | `en`                                  |
+| Variable              | Description                                                 | Default                                                              |
+| :-------------------- | :---------------------------------------------------------- | :------------------------------------------------------------------- |
+| `API_KEY`             | **Required**. Your [SerpApi](https://serpapi.com/) API Key. | `None`                                                               |
+| `SEARCH_QUERIES`      | List of job titles to search for.                           | `["software developer"]`                                             |
+| `LOCATIONS`           | List of locations to search in.                             | `["Toronto, Ontario, Canada"]`                                       |
+| `MAX_PAGES`           | Max pages to fetch per query/location.                      | `5`                                                                  |
+| `MIN_SALARY`          | Minimum annual salary.                                      | `50000`                                                              |
+| `MAX_DAYS_OLD`        | Max age of job posting in days.                             | `7`                                                                  |
+| `BLACKLIST_COMPANIES` | Companies to exclude.                                       | `[]`                                                                 |
+| `EXCLUDE_KEYWORDS`    | Keywords to exclude from titles.                            | `[]`                                                                 |
+| `SCHEDULE_TYPES`      | Allowed schedule types (e.g., Full-time).                   | `["Full-time"]`                                                      |
+| `TRUSTED_DOMAINS`     | Allowed application sources.                                | `["linkedin", "glassdoor", "indeed", "ziprecruiter", "simplyhired"]` |
+| `GOOGLE_DOMAIN`       | Google domain to use.                                       | `google.ca`                                                          |
+| `GL`                  | Country code.                                               | `ca`                                                                 |
+| `HL`                  | Language code.                                              | `en`                                                                 |
 
-### Local Development
+---
 
-1. Create a `.env` file in the root directory.
-2. Add your configuration:
-   ```env
-   API_KEY=your_api_key_here
-   SEARCH_QUERIES=["software engineer intern", "backend developer"]
-   LOCATIONS=["San Francisco, California, United States", "New York, New York, United States"]
-   MAX_PAGES=3
-   ```
+## Local Development
 
-### GitHub Actions
+### Option 1: Using Docker (Recommended)
 
-1. Go to your repository settings -> **Secrets and variables** -> **Actions**.
-2. Add `API_KEY` as a **Repository Secret**.
-3. Add other parameters (e.g., `SEARCH_QUERIES`, `LOCATIONS`) as **Repository Variables**.
-   - For `LOCATIONS`, you can enter a JSON array like `["City A, State, Country", "City B, State, Country"]`.
+Docker ensures you run in the exact same environment as the GitHub Action.
 
-## Docker Usage
+1.  **Prerequisites**: Install Docker Desktop.
+2.  **Build the Image**:
+    ```bash
+    docker build -t job-finder .
+    ```
+3.  **Run the Container**:
+    Create a `.env` file with your config, then run:
 
-You can run the application in a Docker container to ensure a consistent environment.
+    ```bash
+    # Windows (Command Prompt)
+    docker run --rm -v "%cd%:/app" --env-file .env job-finder
 
-### Prerequisites
+    # Windows (PowerShell)
+    docker run --rm -v "${PWD}:/app" --env-file .env job-finder
 
-- Docker installed on your machine.
+    # Linux/WSL/Mac
+    docker run --rm -v "$(pwd):/app" --env-file .env job-finder
+    ```
 
-### Build the Image
+    _The `-v` flag mounts your current directory so `jobs.md` and `jobs.json` are saved to your computer._
 
-Run the following command in the root directory of the project:
+### Option 2: Using Python Directly
 
-```bash
-docker build -t job-finder .
-```
+1.  **Prerequisites**: Python 3.11+
+2.  **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Configure**: Create a `.env` file in the root directory.
+    ```env
+    API_KEY=your_serpapi_key
+    SEARCH_QUERIES=["python developer", "backend engineer"]
+    LOCATIONS=["New York, NY"]
+    ```
+4.  **Run**:
+    ```bash
+    python src/main.py
+    ```
 
-### Run the Container
+---
 
-To run the container and save the output files (`jobs.json`, `jobs.md`) to your local machine, mount the current directory to `/app` in the container.
+## GitHub Actions Workflow
 
-**Using a .env file:**
+The project includes a workflow (`.github/workflows/workflow.yml`) that automates the job search.
 
-```bash
-docker run --rm -v "$(pwd):/app" --env-file .env job-finder
-```
+### How it Works
 
-_Note: On Windows Command Prompt, use `%cd%` instead of `$(pwd)`. On PowerShell, use `${PWD}`._
+1.  **Schedule**: Runs automatically every Saturday at 14:00 UTC.
+2.  **Environment**: Builds a Docker container to ensure reproducibility.
+3.  **Execution**:
+    - Fetches job history from a dedicated orphan branch (`job-history-data`).
+    - Runs the search script.
+    - Filters out jobs seen in previous runs.
+4.  **Artifacts**:
+    - `jobs.json`: Raw data of found jobs.
+    - `jobs.md`: Formatted report.
+5.  **Notification**: Creates a **GitHub Issue** in the repository with the contents of `jobs.md` and assigns it to you.
+6.  **History Update**: Commits the new job IDs back to the `job-history-data` branch to prevent duplicates next week.
 
-**Passing environment variables directly:**
+### Setup
 
-```bash
-docker run --rm -v "$(pwd):/app" -e API_KEY=your_key -e SEARCH_QUERIES='["python developer"]' job-finder
-```
+1.  Go to **Settings** > **Secrets and variables** > **Actions**.
+2.  Add `API_KEY` as a **Repository Secret**.
+3.  Add other config (e.g., `SEARCH_QUERIES`) as **Repository Variables**.
+
+---
+
+## Search Logic & API
+
+### SerpApi
+
+This project uses the [SerpApi Google Jobs API](https://serpapi.com/google-jobs-api).
+
+- **Engine**: `google_jobs`
+- **Limits**: Be aware of your SerpApi plan limits. Each page of results counts as 1 search.
+  - _Formula_: `(Queries * Locations * Max_Pages) = Total API Calls`
+
+### Deduplication & Filtering
+
+1.  **Intra-run**: Removes duplicates found within the same search session.
+2.  **Inter-run**: Checks `data/history.json` to ensure you don't see the same job ID from last week.
+3.  **Quality Filters**:
+    - **Regex Matching**: Ensures keywords like "lead" don't accidentally filter "Leading Company".
+    - **Source Validation**: Prioritizes direct company sites or trusted boards (LinkedIn, Indeed) over spammy aggregators.
+
+---
+
+## Contribution
+
+Contributions are welcome!
+
+1.  **Fork** the repository.
+2.  **Create a branch** (`git checkout -b feature/amazing-feature`).
+3.  **Commit** your changes.
+4.  **Push** to the branch.
+5.  **Open a Pull Request**.
+
+### Adding New Queries/Locations
+
+You don't need to change code! Just update your `.env` file or GitHub Repository Variables.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License (with exceptions). See `LICENSE` for more information.
