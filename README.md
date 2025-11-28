@@ -149,6 +149,6 @@ You don't need to change code! Just update your `.env` file or GitHub Repository
 
 ---
 
-## 📄 License
+## License
 
-Distributed under the MIT License (with exceptions). See `LICENSE` for more information.
+Distributed under the MIT License (with exceptions). See [`LICENSE`](LICENSE) for more information.
