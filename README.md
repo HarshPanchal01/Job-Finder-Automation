@@ -6,21 +6,21 @@ The goal of this repository is to fetch jobs from google search based on paramet
 
 You can configure the job search parameters using environment variables. This works for both local development (using a `.env` file) and GitHub Actions (using Repository Variables/Secrets).
 
-| Variable              | Description                                                                                                           | Default                    |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `API_KEY`             | **Required**. Your SerpApi API Key.                                                                                   | None                       |
-| `SEARCH_QUERIES`      | List of search queries (JSON list or comma-separated).                                                                | `["software developer"]`   |
-| `LOCATIONS`           | A JSON list of locations or a single string. e.g. `["Toronto, Ontario, Canada", "New York, New York, United States"]` | `Toronto, Ontario, Canada` |
-| `MAX_PAGES`           | Maximum number of pages to fetch per location.                                                                        | `5`                        |
-| `MIN_SALARY`          | Minimum annual salary to filter jobs. Jobs with unknown salary are kept.                                              | `50000`                    |
-| `MAX_DAYS_OLD`        | Maximum age of job postings in days. Jobs older than this will be filtered out.                                       | `7`                        |
-| `BLACKLIST_COMPANIES` | List of companies to exclude (JSON list or comma-separated).                                                          | `[]`                       |
-| `EXCLUDE_KEYWORDS`    | List of keywords to exclude from job titles (JSON list or comma-separated).                                           | `[]`                       |
-| `SCHEDULE_TYPES`      | List of allowed schedule types (JSON list or comma-separated). e.g. `["Full-time", "Part-time"]`                      | `["Full-time"]`            |
+| Variable              | Description                                                                                                           | Default                               |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `API_KEY`             | **Required**. Your SerpApi API Key.                                                                                   | None                                  |
+| `SEARCH_QUERIES`      | List of search queries (JSON list or comma-separated).                                                                | `["software developer"]`              |
+| `LOCATIONS`           | A JSON list of locations or a single string. e.g. `["Toronto, Ontario, Canada", "New York, New York, United States"]` | `Toronto, Ontario, Canada`            |
+| `MAX_PAGES`           | Maximum number of pages to fetch per location.                                                                        | `5`                                   |
+| `MIN_SALARY`          | Minimum annual salary to filter jobs. Jobs with unknown salary are kept.                                              | `50000`                               |
+| `MAX_DAYS_OLD`        | Maximum age of job postings in days. Jobs older than this will be filtered out.                                       | `7`                                   |
+| `BLACKLIST_COMPANIES` | List of companies to exclude (JSON list or comma-separated).                                                          | `[]`                                  |
+| `EXCLUDE_KEYWORDS`    | List of keywords to exclude from job titles (JSON list or comma-separated).                                           | `[]`                                  |
+| `SCHEDULE_TYPES`      | List of allowed schedule types (JSON list or comma-separated). e.g. `["Full-time", "Part-time"]`                      | `["Full-time"]`                       |
 | `TRUSTED_DOMAINS`     | List of trusted domains for application sources (JSON list or comma-separated).                                       | `["linkedin", "glassdoor", "indeed"]` |
-| `GOOGLE_DOMAIN`       | The Google domain to use.                                                                                             | `google.ca`                |
-| `GL`                  | Country code for search results.                                                                                      | `ca`                       |
-| `HL`                  | Language code for search results.                                                                                     | `en`                       |
+| `GOOGLE_DOMAIN`       | The Google domain to use.                                                                                             | `google.ca`                           |
+| `GL`                  | Country code for search results.                                                                                      | `ca`                                  |
+| `HL`                  | Language code for search results.                                                                                     | `en`                                  |
 
 ### Local Development
 
@@ -39,3 +39,37 @@ You can configure the job search parameters using environment variables. This wo
 2. Add `API_KEY` as a **Repository Secret**.
 3. Add other parameters (e.g., `SEARCH_QUERIES`, `LOCATIONS`) as **Repository Variables**.
    - For `LOCATIONS`, you can enter a JSON array like `["City A, State, Country", "City B, State, Country"]`.
+
+## Docker Usage
+
+You can run the application in a Docker container to ensure a consistent environment.
+
+### Prerequisites
+
+- Docker installed on your machine.
+
+### Build the Image
+
+Run the following command in the root directory of the project:
+
+```bash
+docker build -t job-finder .
+```
+
+### Run the Container
+
+To run the container and save the output files (`jobs.json`, `jobs.md`) to your local machine, mount the current directory to `/app` in the container.
+
+**Using a .env file:**
+
+```bash
+docker run --rm -v "$(pwd):/app" --env-file .env job-finder
+```
+
+_Note: On Windows Command Prompt, use `%cd%` instead of `$(pwd)`. On PowerShell, use `${PWD}`._
+
+**Passing environment variables directly:**
+
+```bash
+docker run --rm -v "$(pwd):/app" -e API_KEY=your_key -e SEARCH_QUERIES='["python developer"]' job-finder
+```
