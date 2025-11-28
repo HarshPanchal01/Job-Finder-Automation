@@ -71,11 +71,25 @@ def test_job_filter_excluded_keyword_case_insensitive(mock_config):
     assert reason is not None
     assert "Excluded keyword" in reason
 
-def test_job_filter_partial_keyword_match(mock_config):
-    """Test that partial keyword matches work (e.g. 'intern' in 'internship')."""
+def test_job_filter_partial_keyword_match_should_not_reject(mock_config):
+    """Test that partial keyword matches do NOT reject (e.g. 'lead' in 'leading')."""
+    mock_config.exclude_keywords = ["lead"]
     job_filter = JobFilter(mock_config)
     job = {
-        "title": "Software Engineering Internship",
+        "title": "Leading Tech Team",
+        "company_name": "Good Company",
+        "apply_options": [{"title": "LinkedIn", "link": "https://linkedin.com/jobs/..."}]
+    }
+    is_valid, reason = job_filter.is_valid(job)
+    assert is_valid is True
+    assert reason is None
+
+def test_job_filter_exact_word_match(mock_config):
+    """Test that exact word matches are rejected."""
+    mock_config.exclude_keywords = ["lead"]
+    job_filter = JobFilter(mock_config)
+    job = {
+        "title": "Team Lead",
         "company_name": "Good Company"
     }
     is_valid, reason = job_filter.is_valid(job)

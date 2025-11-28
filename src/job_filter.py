@@ -1,4 +1,5 @@
 import logging
+import re
 
 class JobFilter:
     def __init__(self, config):
@@ -22,7 +23,8 @@ class JobFilter:
         
         # Check excluded keywords in title
         for keyword in self.exclude_keywords:
-            if keyword in title:
+            # Use regex word boundary check to avoid partial matches (e.g. 'lead' in 'leading')
+            if re.search(r'\b' + re.escape(keyword) + r'\b', title):
                 return False, f"Excluded keyword '{keyword}' in title: {job.get('title')}"
 
         # Check schedule type
