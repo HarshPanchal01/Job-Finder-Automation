@@ -8,6 +8,7 @@ def mock_config():
     config.blacklist_companies = ["Bad Corp"]
     config.exclude_keywords = ["Senior"]
     config.schedule_types = ["Full-time"]
+    config.trusted_domains = ["linkedin", "glassdoor", "indeed"]
     return config
 
 def test_job_filter_schedule_type_full_time(mock_config):
@@ -16,7 +17,8 @@ def test_job_filter_schedule_type_full_time(mock_config):
     job = {
         "title": "Developer",
         "company_name": "Good Corp",
-        "detected_extensions": {"schedule_type": "Full-time"}
+        "detected_extensions": {"schedule_type": "Full-time"},
+        "apply_options": [{"title": "LinkedIn", "link": "https://linkedin.com/jobs/..."}]
     }
     is_valid, reason = job_filter.is_valid(job)
     assert is_valid is True
@@ -28,7 +30,8 @@ def test_job_filter_schedule_type_missing(mock_config):
     job = {
         "title": "Developer",
         "company_name": "Good Corp",
-        "detected_extensions": {}
+        "detected_extensions": {},
+        "apply_options": [{"title": "LinkedIn", "link": "https://linkedin.com/jobs/..."}]
     }
     is_valid, reason = job_filter.is_valid(job)
     assert is_valid is True
@@ -41,6 +44,7 @@ def test_job_filter_schedule_type_none(mock_config):
         "title": "Developer",
         "company_name": "Good Corp",
         # No detected_extensions key at all
+        "apply_options": [{"title": "LinkedIn", "link": "https://linkedin.com/jobs/..."}]
     }
     is_valid, reason = job_filter.is_valid(job)
     assert is_valid is True
@@ -81,7 +85,8 @@ def test_job_filter_schedule_type_custom_config(mock_config):
     job_pt = {
         "title": "Developer",
         "company_name": "Good Corp",
-        "detected_extensions": {"schedule_type": "Part-time"}
+        "detected_extensions": {"schedule_type": "Part-time"},
+        "apply_options": [{"title": "LinkedIn", "link": "https://linkedin.com/jobs/..."}]
     }
     is_valid, reason = job_filter.is_valid(job_pt)
     assert is_valid is True

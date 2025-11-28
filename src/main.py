@@ -103,7 +103,7 @@ def main():
         history.add_job(job)
     
     logging.info(f"Skipped {skipped_history} jobs due to history (already seen).")
-    logging.info(f"Skipped {skipped_filter} jobs due to blacklist/keywords/schedule type.")
+    logging.info(f"Skipped {skipped_filter} jobs due to filters (blacklist/keywords/schedule/sources).")
     logging.info(f"Skipped {skipped_salary} jobs due to low salary.")
     logging.info(f"Skipped {skipped_date} jobs due to age.")
     logging.info(f"Net new jobs after history, salary, and date check: {len(new_jobs)}")

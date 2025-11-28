@@ -35,6 +35,10 @@ on:
         description: "Schedule Types (JSON list or comma-separated)"
         required: false
         type: string
+      trusted_domains:
+        description: "Trusted Domains (JSON list or comma-separated)"
+        required: false
+        type: string
       google_domain:
         description: "Google Domain"
         required: false
@@ -89,6 +93,7 @@ jobs:
           BLACKLIST_COMPANIES: ${{ inputs.blacklist_companies || vars.BLACKLIST_COMPANIES }}
           EXCLUDE_KEYWORDS: ${{ inputs.exclude_keywords || vars.EXCLUDE_KEYWORDS }}
           SCHEDULE_TYPES: ${{ inputs.schedule_types || vars.SCHEDULE_TYPES }}
+          TRUSTED_DOMAINS: ${{ inputs.trusted_domains || vars.TRUSTED_DOMAINS }}
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
