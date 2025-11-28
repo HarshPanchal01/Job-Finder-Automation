@@ -17,6 +17,7 @@ You can configure the job search parameters using environment variables. This wo
 | `BLACKLIST_COMPANIES` | List of companies to exclude (JSON list or comma-separated).                                                          | `[]`                       |
 | `EXCLUDE_KEYWORDS`    | List of keywords to exclude from job titles (JSON list or comma-separated).                                           | `[]`                       |
 | `SCHEDULE_TYPES`      | List of allowed schedule types (JSON list or comma-separated). e.g. `["Full-time", "Part-time"]`                      | `["Full-time"]`            |
+| `TRUSTED_DOMAINS`     | List of trusted domains for application sources (JSON list or comma-separated).                                       | `["linkedin", "glassdoor", "indeed"]` |
 | `GOOGLE_DOMAIN`       | The Google domain to use.                                                                                             | `google.ca`                |
 | `GL`                  | Country code for search results.                                                                                      | `ca`                       |
 | `HL`                  | Language code for search results.                                                                                     | `en`                       |

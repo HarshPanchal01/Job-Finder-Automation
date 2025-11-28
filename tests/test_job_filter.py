@@ -8,6 +8,7 @@ def mock_config():
     config.blacklist_companies = ["bad company", "spam corp"]
     config.exclude_keywords = ["senior", "intern"]
     config.schedule_types = ["full-time"]
+    config.trusted_domains = ["linkedin", "glassdoor", "indeed"]
     return config
 
 def test_job_filter_valid_job(mock_config):
@@ -15,7 +16,8 @@ def test_job_filter_valid_job(mock_config):
     job_filter = JobFilter(mock_config)
     job = {
         "title": "Software Engineer",
-        "company_name": "Good Company"
+        "company_name": "Good Company",
+        "apply_options": [{"title": "LinkedIn", "link": "https://linkedin.com/jobs/..."}]
     }
     is_valid, reason = job_filter.is_valid(job)
     assert is_valid is True

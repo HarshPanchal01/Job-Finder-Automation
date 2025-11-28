@@ -69,6 +69,14 @@ class Config:
             # Default to Full-time if not specified
             self.schedule_types = ["full-time"]
 
+        # Trusted Domains for Application Sources
+        trusted_domains_str = os.getenv("TRUSTED_DOMAINS")
+        if trusted_domains_str:
+            self.trusted_domains = self._parse_list(trusted_domains_str)
+        else:
+            # Default trusted domains
+            self.trusted_domains = ["linkedin", "glassdoor", "indeed", "ziprecruiter", "simplyhired"]
+
     def _parse_list(self, env_str):
         """Parses a JSON list string or comma-separated string into a list."""
         if not env_str:
