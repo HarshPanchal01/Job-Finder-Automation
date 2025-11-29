@@ -165,7 +165,7 @@ jobs:
           title: Weekly Job Search Results
           content-filepath: ./jobs.md
           labels: Automation-Email
-          assignees: HarshPanchal01, anmolp476
+          assignees: HarshPanchal01, anmolp476, JamesMeta
 
       - name: Close created issue
         env:
