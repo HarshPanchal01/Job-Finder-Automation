@@ -14,6 +14,45 @@ class FileManager:
         logging.info(f"Job results saved to {filename}")
 
     @staticmethod
+    def save_summary_markdown(jobs, filename):
+        """
+        Saves a summary of the job data to a Markdown file.
+        Used for the GitHub Issue body to avoid character limits.
+        """
+        logging.info(f"Saving Summary Markdown data to {filename}...")
+        
+        # Group jobs by search_location
+        jobs_by_location = {}
+        for job in jobs:
+            parsed_job = JobParser.parse_job(job)
+            # Use 'Unknown Location' if search_location is missing
+            loc = parsed_job.get('search_location', 'Unknown Location')
+            if loc not in jobs_by_location:
+                jobs_by_location[loc] = []
+            jobs_by_location[loc].append(parsed_job)
+            
+        with open(filename, 'w', encoding="utf-8") as f:
+            f.write("# Weekly Job Search Results (Summary)\n\n")
+            
+            if not jobs:
+                f.write("No jobs found this week.\n")
+                logging.info(f"Job results summary saved to {filename}")
+                return
+
+            # Summary Section
+            f.write("## Summary\n\n")
+            f.write(f"**Total Jobs Found:** {len(jobs)}\n\n")
+            f.write("| Location | Jobs |\n")
+            f.write("| :--- | :---: |\n")
+            for location in sorted(jobs_by_location.keys()):
+                count = len(jobs_by_location[location])
+                f.write(f"| {location} | {count} |\n")
+            f.write("\n---\n\n")
+            f.write("**Note:** The full report is too long to display here. Please download the `jobs-report` artifact from the Workflow Run to see all job details.\n")
+        
+        logging.info(f"Job results summary saved to {filename}")
+
+    @staticmethod
     def save_markdown(jobs, filename):
         """
         Saves the parsed job data to a Markdown file, grouped by search location.
