@@ -112,6 +112,7 @@ def main():
     logging.info("Saving results...")
     FileManager.save_json(new_jobs, 'jobs.json')
     FileManager.save_markdown(new_jobs, 'jobs.md')
+    FileManager.save_summary_markdown(new_jobs, 'summary.md')
     
     # Save history and cleanup
     history.save_history()

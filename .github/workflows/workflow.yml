@@ -2,7 +2,7 @@ name: Job Finder Automation
 
 on:
   schedule:
-    - cron: "0 15 * * 6"
+    - cron: "0 0 * * 7"
   workflow_dispatch:
     inputs:
       search_queries:
@@ -122,11 +122,13 @@ jobs:
           # We change ownership back to the runner user so the upload/commit steps work.
           sudo chown -R $USER:$USER .
 
-      - name: Upload jobs.json
+      - name: Upload Job Reports
         uses: actions/upload-artifact@v4
         with:
-          name: jobs-json
-          path: jobs.json
+          name: job-reports
+          path: |
+            jobs.json
+            jobs.md
 
       - name: Commit and Push History
         run: |
@@ -163,7 +165,7 @@ jobs:
         uses: peter-evans/create-issue-from-file@v4
         with:
           title: Weekly Job Search Results
-          content-filepath: ./jobs.md
+          content-filepath: ./summary.md
           labels: Automation-Email
           assignees: HarshPanchal01, anmolp476, JamesMeta
 
