@@ -24,7 +24,20 @@ class JobFilter:
         # Check excluded keywords in title
         for keyword in self.exclude_keywords:
             # Use regex word boundary check to avoid partial matches (e.g. 'lead' in 'leading')
-            if re.search(r'\b' + re.escape(keyword) + r'\b', title):
+            # Handle special case where keyword ends with punctuation (like 'sr.')
+            pattern = r''
+            
+            # Add leading boundary if keyword starts with a word char
+            if keyword and keyword[0].isalnum():
+                pattern += r'\b'
+            
+            pattern += re.escape(keyword)
+            
+            # Add trailing boundary if keyword ends with a word char
+            if keyword and keyword[-1].isalnum():
+                pattern += r'\b'
+                
+            if re.search(pattern, title):
                 return False, f"Excluded keyword '{keyword}' in title: {job.get('title')}"
 
         # Check schedule type

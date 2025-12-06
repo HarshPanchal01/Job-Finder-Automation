@@ -96,3 +96,36 @@ def test_job_filter_exact_word_match(mock_config):
     assert is_valid is False
     assert reason is not None
     assert "Excluded keyword" in reason
+
+def test_job_filter_punctuation_keyword(mock_config):
+    """Test that keywords with punctuation (like 'sr.') are correctly filtered."""
+    mock_config.exclude_keywords = ["sr."]
+    job_filter = JobFilter(mock_config)
+    
+    # Should reject "Sr. Developer"
+    job1 = {
+        "title": "Sr. Developer",
+        "company_name": "Good Company"
+    }
+    is_valid, reason = job_filter.is_valid(job1)
+    assert is_valid is False
+    assert "Excluded keyword" in reason
+
+    # Should reject "Developer Sr."
+    job2 = {
+        "title": "Developer Sr.",
+        "company_name": "Good Company"
+    }
+    is_valid, reason = job_filter.is_valid(job2)
+    assert is_valid is False
+    assert "Excluded keyword" in reason
+    
+    # Should NOT reject "Sr" (without dot) if only "sr." is excluded
+    # (Though usually you'd exclude both, this tests exact matching)
+    job3 = {
+        "title": "Sr Developer",
+        "company_name": "Good Company",
+        "apply_options": [{"title": "LinkedIn", "link": "https://linkedin.com/jobs/..."}]
+    }
+    is_valid, reason = job_filter.is_valid(job3)
+    assert is_valid is True
