@@ -2,7 +2,7 @@ name: Job Finder Automation
 
 on:
   schedule:
-    - cron: "0 0 * * 7"
+    - cron: "15 0 * * 0"
   workflow_dispatch:
     inputs:
       search_queries:
