@@ -1,4 +1,6 @@
 import logging
+import os
+import shutil
 from config import Config
 from job_finder import JobFinder
 from file_manager import FileManager
@@ -115,10 +117,8 @@ def main():
     
     # Check if jobs.md is too large for GitHub Issue body (limit is ~65536 chars)
     # We use a safe limit of 60000 to account for overhead
-    import os
     if os.path.getsize('jobs.md') < 60000:
         logging.info("Report is small enough for GitHub Issue. Copying to summary.md.")
-        import shutil
         shutil.copy('jobs.md', 'summary.md')
     else:
         logging.info("Report is too large. Generating condensed summary.")

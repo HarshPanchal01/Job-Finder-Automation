@@ -8,7 +8,9 @@ from config import Config
 @patch("main.JobHistory")
 @patch("main.JobFilter")
 @patch("main.FileManager")
-def test_main_multiple_queries(mock_file_manager, mock_job_filter, mock_job_history, mock_job_finder, mock_config_class):
+@patch("os.path.getsize")
+@patch("shutil.copy")
+def test_main_multiple_queries(mock_shutil_copy, mock_getsize, mock_file_manager, mock_job_filter, mock_job_history, mock_job_finder, mock_config_class):
     """Test that main iterates over multiple queries and locations."""
     
     # Setup mock config
@@ -38,6 +40,9 @@ def test_main_multiple_queries(mock_file_manager, mock_job_filter, mock_job_hist
     mock_filter_instance.is_valid.return_value = (True, "Valid")
     mock_job_filter.return_value = mock_filter_instance
     
+    # Mock file size to be small so it tries to copy
+    mock_getsize.return_value = 1000
+
     # Run main
     main()
     
