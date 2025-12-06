@@ -112,7 +112,17 @@ def main():
     logging.info("Saving results...")
     FileManager.save_json(new_jobs, 'jobs.json')
     FileManager.save_markdown(new_jobs, 'jobs.md')
-    FileManager.save_summary_markdown(new_jobs, 'summary.md')
+    
+    # Check if jobs.md is too large for GitHub Issue body (limit is ~65536 chars)
+    # We use a safe limit of 60000 to account for overhead
+    import os
+    if os.path.getsize('jobs.md') < 60000:
+        logging.info("Report is small enough for GitHub Issue. Copying to summary.md.")
+        import shutil
+        shutil.copy('jobs.md', 'summary.md')
+    else:
+        logging.info("Report is too large. Generating condensed summary.")
+        FileManager.save_summary_markdown(new_jobs, 'summary.md')
     
     # Save history and cleanup
     history.save_history()
