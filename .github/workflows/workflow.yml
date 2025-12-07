@@ -1,8 +1,58 @@
-name: Job Finder Automation Workflow
+name: Job Finder Automation
 
 on:
   schedule:
     - cron: "1 */3 * * *"
+  workflow_dispatch:
+    inputs:
+      search_queries:
+        description: "Search Queries (JSON list or comma-separated)"
+        required: false
+        type: string
+      locations:
+        description: "Locations (JSON list or single string)"
+        required: false
+        type: string
+      max_pages:
+        description: "Max Pages per Location"
+        required: false
+        type: string
+      min_salary:
+        description: "Minimum Salary"
+        required: false
+        type: string
+      max_days_old:
+        description: "Max Days Old"
+        required: false
+        type: string
+      blacklist_companies:
+        description: "Blacklist Companies (JSON list or comma-separated)"
+        required: false
+        type: string
+      exclude_keywords:
+        description: "Exclude Keywords (JSON list or comma-separated)"
+        required: false
+        type: string
+      schedule_types:
+        description: "Schedule Types (JSON list or comma-separated)"
+        required: false
+        type: string
+      trusted_domains:
+        description: "Trusted Domains (JSON list or comma-separated)"
+        required: false
+        type: string
+      google_domain:
+        description: "Google Domain"
+        required: false
+        type: string
+      gl:
+        description: "GL (Country Code)"
+        required: false
+        type: string
+      hl:
+        description: "HL (Language Code)"
+        required: false
+        type: string
   
 permissions:
   issues: write
@@ -32,18 +82,18 @@ jobs:
       - name: Run Automation in Docker
         env:
           API_KEY: ${{ secrets.API_KEY }}
-          SEARCH_QUERIES: ${{ vars.SEARCH_QUERIES }}
-          LOCATIONS: ${{ vars.LOCATIONS }}
-          MAX_PAGES: ${{ vars.MAX_PAGES }}
-          MIN_SALARY: ${{ vars.MIN_SALARY }}
-          MAX_DAYS_OLD: ${{ vars.MAX_DAYS_OLD }}
-          BLACKLIST_COMPANIES: ${{ vars.BLACKLIST_COMPANIES }}
-          EXCLUDE_KEYWORDS: ${{ vars.EXCLUDE_KEYWORDS }}
-          SCHEDULE_TYPES: ${{ vars.SCHEDULE_TYPES }}
-          TRUSTED_DOMAINS: ${{ vars.TRUSTED_DOMAINS }}
-          GOOGLE_DOMAIN: ${{ vars.GOOGLE_DOMAIN }}
-          GL: ${{ vars.GL }}
-          HL: ${{ vars.HL }}
+          SEARCH_QUERIES: ${{ inputs.search_queries || vars.SEARCH_QUERIES }}
+          LOCATIONS: ${{ inputs.locations || vars.LOCATIONS }}
+          MAX_PAGES: ${{ inputs.max_pages || vars.MAX_PAGES }}
+          MIN_SALARY: ${{ inputs.min_salary || vars.MIN_SALARY }}
+          MAX_DAYS_OLD: ${{ inputs.max_days_old || vars.MAX_DAYS_OLD }}
+          BLACKLIST_COMPANIES: ${{ inputs.blacklist_companies || vars.BLACKLIST_COMPANIES }}
+          EXCLUDE_KEYWORDS: ${{ inputs.exclude_keywords || vars.EXCLUDE_KEYWORDS }}
+          SCHEDULE_TYPES: ${{ inputs.schedule_types || vars.SCHEDULE_TYPES }}
+          TRUSTED_DOMAINS: ${{ inputs.trusted_domains || vars.TRUSTED_DOMAINS }}
+          GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
+          GL: ${{ inputs.gl || vars.GL }}
+          HL: ${{ inputs.hl || vars.HL }}
         run: |
           # Create a .env file to pass variables easily to Docker
           echo "API_KEY=$API_KEY" >> .env
