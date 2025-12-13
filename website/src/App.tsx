@@ -47,7 +47,7 @@ export default function App() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white antialiased">
+    <main className="min-h-screen bg-neutral-950 text-white antialiased scroll-smooth">
       {/* HEADER */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-neutral-950/70 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -167,24 +167,24 @@ export default function App() {
                 {
                   quote:
                     "Feels like a personal recruiter that just runs quietly.",
-                  user: "@exampledev",
+                  user: "@Aumtk",
                 },
                 {
                   quote:
                     "Pagination and dedupe alone saved me hours every week.",
-                  user: "@backendbro",
+                  user: "@bh4vya",
                 },
                 {
                   quote: "The GitHub Issue format makes skimming effortless.",
-                  user: "@devstudent",
+                  user: "@JamesMeta",
                 },
                 {
                   quote: "No dashboards, no logins, no nonsense.",
-                  user: "@shipitpls",
+                  user: "@Yanny24211",
                 },
                 {
                   quote: "Docker support made setup trivial.",
-                  user: "@infra_fan",
+                  user: "@deep-patel21",
                 },
               ].map((t, i) => (
                 <div
