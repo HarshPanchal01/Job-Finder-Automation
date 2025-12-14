@@ -117,38 +117,47 @@ export default function App() {
 
       {/* HOW IT WORKS */}
       <section id="how" className="border-t border-white/10">
-        <div className="mx-auto max-w-6xl px-6 py-28 space-y-24">
+        <div className="mx-auto max-w-6xl px-6 py-28 space-y-20">
           {[
             {
               title: "Configure once",
               text: "Define search queries, locations, salary limits, and filters using environment variables.",
+              gif: configureGIF,
+              alt: "Config setup demo",
             },
             {
               title: "Automated discovery",
               text: "Runs on a schedule, paginates results, and deduplicates aggressively.",
+              gif: automatedDiscoveryGIF,
+              alt: "Pagination and dedupe demo",
             },
             {
               title: "Clean weekly report",
               text: "Delivered as a readable Markdown report or GitHub Issue.",
+              gif: weeklyReportGIF,
+              alt: "Report output demo",
             },
-          ].map((step, whichGIF) => (
-            <div key={whichGIF} className="grid md:grid-cols-2 gap-12 items-center">
+          ].map((step, i) => (
+            <div key={i} className="space-y-6">
               <div>
                 <h2 className="text-3xl font-semibold tracking-tight">
                   {step.title}
                 </h2>
-                <p className="mt-4 text-lg text-white/70">{step.text}</p>
+                <p className="mt-4 max-w-3xl text-lg text-white/70">
+                  {step.text}
+                </p>
               </div>
 
-              <div className="relative h-56 overflow-hidden rounded-2xl border border-white/10 bg-black">
+              <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
                 <img
-                  src={
-                    whichGIF === 0 ? configureGIF : whichGIF === 1 ? automatedDiscoveryGIF : weeklyReportGIF
-                  }
-                  alt={step.title}
-                  className="h-full w-full object-cover"
+                  src={step.gif}
+                  alt={step.alt}
+                  className="w-full h-auto object-contain"
+                  loading="lazy"
                 />
               </div>
+
+              {i !== 2 && <div className="border-t border-white/10 pt-2" />}
             </div>
           ))}
         </div>
