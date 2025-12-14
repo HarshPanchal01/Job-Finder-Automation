@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
 import logo from "./assets/automationLogo.png";
+import configureGIF from "./assets/ConfigureAnimation.gif";
+import weeklyReportGIF from "./assets/CleanWeeklyReportAnimation.gif";
+import automatedDiscoveryGIF from "./assets/AutomatedDiscoveryAnimation.gif";
 
 export default function App() {
   const tickerRef = useRef<HTMLDivElement | null>(null);
@@ -128,8 +131,8 @@ export default function App() {
               title: "Clean weekly report",
               text: "Delivered as a readable Markdown report or GitHub Issue.",
             },
-          ].map((step, i) => (
-            <div key={i} className="grid md:grid-cols-2 gap-12 items-center">
+          ].map((step, whichGIF) => (
+            <div key={whichGIF} className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl font-semibold tracking-tight">
                   {step.title}
@@ -137,8 +140,15 @@ export default function App() {
                 <p className="mt-4 text-lg text-white/70">{step.text}</p>
               </div>
 
-              {/* Placeholder for Option C images (we’ll swap these to real screenshots next) */}
-              <div className="h-56 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm" />
+              <div className="relative h-56 overflow-hidden rounded-2xl border border-white/10 bg-black">
+                <img
+                  src={
+                    whichGIF === 0 ? configureGIF : whichGIF === 1 ? automatedDiscoveryGIF : weeklyReportGIF
+                  }
+                  alt={step.title}
+                  className="h-full w-full object-cover"
+                />
+              </div>
             </div>
           ))}
         </div>
