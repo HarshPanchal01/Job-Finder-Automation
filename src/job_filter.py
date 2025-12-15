@@ -1,5 +1,6 @@
 import logging
 import re
+from urllib.parse import urlparse
 
 class JobFilter:
     def __init__(self, config):
@@ -73,6 +74,19 @@ class JobFilter:
         company_name = job.get('company_name', '').lower()
         # Normalize company name for URL check (remove spaces, punctuation could be tricky but let's start simple)
         normalized_company = ''.join(e for e in company_name if e.isalnum())
+
+        def _extract_hostname(raw_url: str) -> str:
+            """Best-effort hostname extraction, tolerant of missing scheme."""
+            if not raw_url:
+                return ""
+            parsed = urlparse(raw_url)
+            if not parsed.netloc and parsed.path and "://" not in raw_url:
+                parsed = urlparse(f"https://{raw_url}")
+
+            host = (parsed.hostname or "").lower()
+            if host.startswith("www."):
+                host = host[4:]
+            return host
         
         for option in apply_options:
             link = option.get('link', '').lower()
@@ -84,8 +98,11 @@ class JobFilter:
                     return True, None
             
             # Check direct company page
-            # Heuristic: if normalized company name is in the link
-            if normalized_company and normalized_company in link:
+            # Heuristic: company name must appear in the hostname (not just the path)
+            # This avoids aggregators like job boards embedding the company name in a URL slug.
+            host = _extract_hostname(link)
+            normalized_host = ''.join(c for c in host if c.isalnum())
+            if normalized_company and normalized_company in normalized_host:
                 return True, None
                     
         return False, "No reputable application source found"

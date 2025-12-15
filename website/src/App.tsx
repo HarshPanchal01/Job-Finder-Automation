@@ -4,10 +4,13 @@ import configureGIF from "./assets/ConfigureAnimation.gif";
 import weeklyReportGIF from "./assets/CleanWeeklyReportAnimation.gif";
 import automatedDiscoveryGIF from "./assets/AutomatedDiscoveryAnimation.gif";
 import pythonLogo from "./assets/python-logo-only.png";
+import serpapiLogo from "./assets/serpapi-logo.png";
 import githubLogo from "./assets/github-mark-white.png";
 import dockerLogo from "./assets/docker-mark-blue.png";
 import secretsImage from "./assets/secrets.png";
 import variablesImage from "./assets/variables.png";
+import actionsImage from "./assets/actions-logs.png";
+import jobHistoryImage from "./assets/job-history.png";
 import emailInboxImage from "./assets/email-inbox.png";
 import githubIssueImage from "./assets/github-issue.png";
 
@@ -116,7 +119,7 @@ export default function App() {
               rel="noreferrer"
               className="rounded-xl border border-white/20 px-6 py-3 text-white/80 hover:border-white/40 transition"
             >
-              View GitHub
+              View on GitHub
             </a>
           </div>
         </div>
@@ -170,64 +173,109 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(secretsImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105"
+                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
                   >
                     <p className="text-sm font-medium text-white/70 mb-3">
-                      Add GitHub Secrets (Click to expand)
+                      Add GitHub secrets (Click to expand)
                     </p>
-                    <img
-                      src={secretsImage}
-                      alt="GitHub Secrets setup"
-                      className="w-full h-auto object-contain"
-                      loading="lazy"
-                    />
+                    <div className="h-[240px] md:h-[260px] flex items-center justify-center">
+                      <img
+                        src={secretsImage}
+                        alt="GitHub Secrets setup"
+                        className="w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
                   <div
                     onClick={() => setExpandedImage(variablesImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105"
+                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
                   >
                     <p className="text-sm font-medium text-white/70 mb-3">
-                      Add GitHub Variables (Click to expand)
+                      Add GitHub variables (Click to expand)
                     </p>
-                    <img
-                      src={variablesImage}
-                      alt="GitHub Variables setup"
-                      className="w-full h-auto object-contain"
-                      loading="lazy"
-                    />
+                    <div className="h-[240px] md:h-[260px] flex items-center justify-center">
+                      <img
+                        src={variablesImage}
+                        alt="GitHub Variables setup"
+                        className="w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {i === 1 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                  <div
+                    onClick={() => setExpandedImage(actionsImage)}
+                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                  >
+                    <p className="text-sm font-medium text-white/70 mb-3">
+                      Filtering logs (Click to expand)
+                    </p>
+                    <div className="h-[240px] md:h-[260px] flex items-center justify-center">
+                      <img
+                        src={actionsImage}
+                        alt="Automated discovery screenshot 1"
+                        className="w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => setExpandedImage(jobHistoryImage)}
+                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                  >
+                    <p className="text-sm font-medium text-white/70 mb-3">
+                      Job history for deduplication in subsequent runs (Click to expand)
+                    </p>
+                    <div className="h-[240px] md:h-[260px] flex items-center justify-center">
+                      <img
+                        src={jobHistoryImage}
+                        alt="Automated discovery screenshot 2"
+                        className="w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
 
               {i === 2 && (
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(emailInboxImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 h-64"
+                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
                   >
                     <p className="text-sm font-medium text-white/70 mb-3">
-                      Delivered to your Email Inbox (Click to expand)
+                      Delivered to your email inbox (Click to expand)
                     </p>
-                    <img
-                      src={emailInboxImage}
-                      alt="Email inbox with weekly report"
-                      className="w-full h-auto object-contain"
-                      loading="lazy"
-                    />
+                    <div className="h-[240px] md:h-[260px] flex items-center justify-center">
+                      <img
+                        src={emailInboxImage}
+                        alt="Email inbox with weekly report"
+                        className="w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
                   <div
                     onClick={() => setExpandedImage(githubIssueImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 h-64"
+                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
                   >
                     <p className="text-sm font-medium text-white/70 mb-3">
-                      Or as a GitHub Issue (Click to expand)
+                      Delivered as a GitHub issue (Click to expand)
                     </p>
-                    <img
-                      src={githubIssueImage}
-                      alt="GitHub Issue with weekly report"
-                      className="w-full h-auto object-contain"
-                      loading="lazy"
-                    />
+                    <div className="h-[240px] md:h-[260px] flex items-center justify-center">
+                      <img
+                        src={githubIssueImage}
+                        alt="GitHub Issue with weekly report"
+                        className="w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
@@ -314,6 +362,18 @@ export default function App() {
                 </div>
                 <span className="text-sm font-medium text-white/70">
                   Python
+                </span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 flex items-center justify-center">
+                  <img
+                    src={serpapiLogo}
+                    alt="SerpAPI"
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+                <span className="text-sm font-medium text-white/70">
+                  SerpApi
                 </span>
               </div>
               <div className="flex flex-col items-center gap-2">
