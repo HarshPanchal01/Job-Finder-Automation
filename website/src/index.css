@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+html,
+body {
+  background-color: rgb(10, 10, 10);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont,
+    sans-serif;
+}
