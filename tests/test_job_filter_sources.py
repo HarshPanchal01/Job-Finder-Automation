@@ -108,6 +108,23 @@ def test_job_filter_source_company_name_match_complex(mock_config):
     assert is_valid is True
     assert reason is None
 
+def test_job_filter_source_company_name_in_path_should_reject(mock_config):
+    """Company name appearing only in the URL path should NOT count as a direct company site."""
+    job_filter = JobFilter(mock_config)
+    job = {
+        "title": "Advanced Trading Systems Developer",
+        "company_name": "beBeeSoftware",
+        "apply_options": [
+            {
+                "title": "Jobilize",
+                "link": "https://www.jobilize.com/job/ca-on-toronto-advanced-trading-systems-developer-bebeesoftware-hiring",
+            }
+        ],
+    }
+    is_valid, reason = job_filter.is_valid(job)
+    assert is_valid is False
+    assert reason == "No reputable application source found"
+
 def test_job_filter_source_ziprecruiter(mock_config):
     """Test that a job with a ZipRecruiter source is accepted."""
     job_filter = JobFilter(mock_config)
