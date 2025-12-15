@@ -4,6 +4,7 @@ import configureGIF from "./assets/ConfigureAnimation.gif";
 import weeklyReportGIF from "./assets/CleanWeeklyReportAnimation.gif";
 import automatedDiscoveryGIF from "./assets/AutomatedDiscoveryAnimation.gif";
 import pythonLogo from "./assets/python-logo-only.png";
+import serpapiLogo from "./assets/serpapi-logo.png";
 import githubLogo from "./assets/github-mark-white.png";
 import dockerLogo from "./assets/docker-mark-blue.png";
 import secretsImage from "./assets/secrets.png";
@@ -314,6 +315,18 @@ export default function App() {
                 </div>
                 <span className="text-sm font-medium text-white/70">
                   Python
+                </span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-12 h-12 flex items-center justify-center">
+                  <img
+                    src={serpapiLogo}
+                    alt="SerpAPI"
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+                <span className="text-sm font-medium text-white/70">
+                  SerpApi
                 </span>
               </div>
               <div className="flex flex-col items-center gap-2">
