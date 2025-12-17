@@ -14,9 +14,40 @@ import jobHistoryImage from "./assets/job-history.png";
 import emailInboxImage from "./assets/email-inbox.png";
 import githubIssueImage from "./assets/github-issue.png";
 
+type Theme = "light" | "dark";
+const STORAGE_KEY = "jfa_theme";
+
 export default function App() {
   const tickerRef = useRef<HTMLDivElement | null>(null);
 
+  // Theme state
+  const [theme, setTheme] = useState<Theme>("dark");
+  const isDark = theme === "dark";
+
+  const applyTheme = (t: Theme) => {
+    document.documentElement.classList.toggle("dark", t === "dark");
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
+    const system: Theme = window.matchMedia?.("(prefers-color-scheme: dark)")
+      .matches
+      ? "dark"
+      : "light";
+    const initial = saved ?? system;
+
+    setTheme(initial);
+    applyTheme(initial);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, theme);
+    applyTheme(theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
+  // Testimonials ticker
   useEffect(() => {
     const track = tickerRef.current;
     if (!track) return;
@@ -62,9 +93,9 @@ export default function App() {
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white antialiased scroll-smooth">
+    <main className="min-h-screen bg-white text-neutral-950 antialiased dark:bg-neutral-950 dark:text-white">
       {/* HEADER */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-neutral-950/70 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-black/10 bg-white/70 backdrop-blur dark:border-white/10 dark:bg-neutral-950/70">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
             <img src={logo} alt="Job Finder Automation" className="h-9 w-9" />
@@ -76,7 +107,7 @@ export default function App() {
           <nav className="flex items-center gap-3 text-sm">
             <a
               href="#how"
-              className="text-white/70 hover:text-white transition"
+              className="text-neutral-700 hover:text-neutral-950 transition dark:text-white/70 dark:hover:text-white"
             >
               How it works
             </a>
@@ -84,10 +115,22 @@ export default function App() {
               href="https://github.com/HarshPanchal01/Job-Finder-Automation"
               target="_blank"
               rel="noreferrer"
-              className="rounded-lg border border-white/15 px-4 py-2 text-white/80 hover:border-white/30 transition"
+              className="rounded-lg border border-black/15 px-4 py-2 text-neutral-700 hover:border-black/30 transition dark:border-white/15 dark:text-white/80 dark:hover:border-white/30"
             >
               GitHub
             </a>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={
+                isDark ? "Switch to light mode" : "Switch to dark mode"
+              }
+              className="rounded-lg border border-black/15 px-3 py-2 text-neutral-700 hover:border-black/30 transition dark:border-white/15 dark:text-white/80 dark:hover:border-white/30"
+              title={isDark ? "Light mode" : "Dark mode"}
+            >
+              {isDark ? "☀️" : "🌙"}
+            </button>
           </nav>
         </div>
       </header>
@@ -98,10 +141,12 @@ export default function App() {
           <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-tight">
             Job searching,
             <br />
-            <span className="text-yellow-200/80">without the noise.</span>
+            <span className="text-yellow-700/90 dark:text-yellow-200/80">
+              without the noise.
+            </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg text-white/70">
+          <p className="mt-6 max-w-xl text-lg text-neutral-700 dark:text-white/70">
             A quiet automation that scans job boards, filters aggressively,
             removes duplicates, and delivers a clean weekly report.
           </p>
@@ -117,7 +162,7 @@ export default function App() {
               href="https://github.com/HarshPanchal01/Job-Finder-Automation"
               target="_blank"
               rel="noreferrer"
-              className="rounded-xl border border-white/20 px-6 py-3 text-white/80 hover:border-white/40 transition"
+              className="rounded-xl border border-black/20 px-6 py-3 text-neutral-800 hover:border-black/40 transition dark:border-white/20 dark:text-white/80 dark:hover:border-white/40"
             >
               View on GitHub
             </a>
@@ -128,7 +173,10 @@ export default function App() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how" className="border-t border-white/10">
+      <section
+        id="how"
+        className="border-t border-black/10 dark:border-white/10"
+      >
         <div className="mx-auto max-w-6xl px-6 py-28 space-y-20">
           {[
             {
@@ -155,12 +203,12 @@ export default function App() {
                 <h2 className="text-3xl font-semibold tracking-tight">
                   {step.title}
                 </h2>
-                <p className="mt-4 max-w-3xl text-lg text-white/70">
+                <p className="mt-4 max-w-3xl text-lg text-neutral-700 dark:text-white/70">
                   {step.text}
                 </p>
               </div>
 
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+              <div className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
                 <img
                   src={step.gif}
                   alt={step.alt}
@@ -173,9 +221,9 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(secretsImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
-                    <p className="text-sm font-medium text-white/70 mb-3">
+                    <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Add GitHub secrets (Click to expand)
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
@@ -187,11 +235,12 @@ export default function App() {
                       />
                     </div>
                   </div>
+
                   <div
                     onClick={() => setExpandedImage(variablesImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
-                    <p className="text-sm font-medium text-white/70 mb-3">
+                    <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Add GitHub variables (Click to expand)
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
@@ -210,9 +259,9 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(actionsImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
-                    <p className="text-sm font-medium text-white/70 mb-3">
+                    <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Filtering logs (Click to expand)
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
@@ -224,12 +273,14 @@ export default function App() {
                       />
                     </div>
                   </div>
+
                   <div
                     onClick={() => setExpandedImage(jobHistoryImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
-                    <p className="text-sm font-medium text-white/70 mb-3">
-                      Job history for deduplication in subsequent runs (Click to expand)
+                    <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
+                      Job history for deduplication in subsequent runs (Click to
+                      expand)
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
@@ -247,9 +298,9 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(emailInboxImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
-                    <p className="text-sm font-medium text-white/70 mb-3">
+                    <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Delivered to your email inbox (Click to expand)
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
@@ -261,11 +312,12 @@ export default function App() {
                       />
                     </div>
                   </div>
+
                   <div
                     onClick={() => setExpandedImage(githubIssueImage)}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-4 cursor-pointer hover:border-white/30 hover:bg-white/10 transition-all hover:scale-105 flex flex-col"
+                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
-                    <p className="text-sm font-medium text-white/70 mb-3">
+                    <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Delivered as a GitHub issue (Click to expand)
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
@@ -280,26 +332,28 @@ export default function App() {
                 </div>
               )}
 
-              {i !== 2 && <div className="border-t border-white/10 pt-2" />}
+              {i !== 2 && (
+                <div className="border-t border-black/10 pt-2 dark:border-white/10" />
+              )}
             </div>
           ))}
         </div>
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="border-t border-white/10">
+      <section className="border-t border-black/10 dark:border-white/10">
         <div className="mx-auto max-w-6xl px-6 py-28">
           <h2 className="text-3xl font-semibold tracking-tight">
             What developers say
           </h2>
-          <p className="mt-3 max-w-xl text-lg text-white/70">
+          <p className="mt-3 max-w-xl text-lg text-neutral-700 dark:text-white/70">
             Built for people who prefer simple efficient solutions.
           </p>
 
-          <div className="mt-10 relative h-[340px] overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+          <div className="mt-10 relative h-[340px] overflow-hidden rounded-2xl border border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
             {/* fade masks */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-neutral-950 to-transparent z-10" />
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-neutral-950 to-transparent z-10" />
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent z-10 dark:from-neutral-950" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent z-10 dark:from-neutral-950" />
 
             <div
               ref={tickerRef}
@@ -330,10 +384,14 @@ export default function App() {
               ].map((t, i) => (
                 <div
                   key={i}
-                  className="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur"
+                  className="rounded-xl border border-black/10 bg-black/10 p-4 backdrop-blur dark:border-white/10 dark:bg-white/10"
                 >
-                  <p className="text-lg text-white/90">{t.quote}</p>
-                  <p className="mt-2 text-sm text-white/50">{t.user}</p>
+                  <p className="text-lg text-neutral-900 dark:text-white/90">
+                    {t.quote}
+                  </p>
+                  <p className="mt-2 text-sm text-neutral-500 dark:text-white/50">
+                    {t.user}
+                  </p>
                 </div>
               ))}
             </div>
@@ -342,15 +400,16 @@ export default function App() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10">
+      <footer className="border-t border-black/10 dark:border-white/10">
         <div className="mx-auto max-w-6xl px-6 py-12">
           <div className="flex flex-col items-center justify-center gap-8">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="text-lg font-semibold text-white/70 hover:text-white transition"
+              className="text-lg font-semibold text-neutral-700 hover:text-neutral-950 transition dark:text-white/70 dark:hover:text-white"
             >
               Job Finder Automation
             </button>
+
             <div className="flex justify-center items-center gap-12">
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 flex items-center justify-center">
@@ -360,10 +419,11 @@ export default function App() {
                     className="max-w-full max-h-full object-contain"
                   />
                 </div>
-                <span className="text-sm font-medium text-white/70">
+                <span className="text-sm font-medium text-neutral-700 dark:text-white/70">
                   Python
                 </span>
               </div>
+
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 flex items-center justify-center">
                   <img
@@ -372,10 +432,11 @@ export default function App() {
                     className="max-w-full max-h-full object-contain"
                   />
                 </div>
-                <span className="text-sm font-medium text-white/70">
+                <span className="text-sm font-medium text-neutral-700 dark:text-white/70">
                   SerpApi
                 </span>
               </div>
+
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 flex items-center justify-center">
                   <img
@@ -384,10 +445,11 @@ export default function App() {
                     className="max-w-full max-h-full object-contain"
                   />
                 </div>
-                <span className="text-sm font-medium text-white/70">
+                <span className="text-sm font-medium text-neutral-700 dark:text-white/70">
                   GitHub
                 </span>
               </div>
+
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 flex items-center justify-center">
                   <img
@@ -396,19 +458,20 @@ export default function App() {
                     className="max-w-full max-h-full object-contain"
                   />
                 </div>
-                <span className="text-sm font-medium text-white/70">
+                <span className="text-sm font-medium text-neutral-700 dark:text-white/70">
                   Docker
                 </span>
               </div>
             </div>
-            <p className="mt-6 text-sm text-white/60 flex flex-wrap items-center gap-1">
+
+            <p className="mt-6 text-sm text-neutral-600 flex flex-wrap items-center gap-1 dark:text-white/60">
               <span className="ml-2">© 2025</span>
               <span>Made with care by</span>
               <a
                 href="https://github.com/HarshPanchal01"
                 target="_blank"
                 rel="noreferrer"
-                className="underline underline-offset-4 hover:text-white"
+                className="underline underline-offset-4 hover:text-neutral-950 dark:hover:text-white"
               >
                 Harsh
               </a>
@@ -417,7 +480,7 @@ export default function App() {
                 href="https://github.com/anmolp476"
                 target="_blank"
                 rel="noreferrer"
-                className="underline underline-offset-4 hover:text-white"
+                className="underline underline-offset-4 hover:text-neutral-950 dark:hover:text-white"
               >
                 Anmol
               </a>
