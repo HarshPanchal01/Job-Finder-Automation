@@ -12,11 +12,16 @@ import githubLogoWhite from "./assets/github-mark-white.png";
 import githubLogoDark from "./assets/github-mark-dark.png";
 import dockerLogo from "./assets/docker-mark-blue.png";
 import secretsImage from "./assets/secrets.png";
+import secretsImageWhite from "./assets/secrets-white.png";
 import variablesImage from "./assets/variables.png";
+import variablesImageWhite from "./assets/variables-white.png";
 import actionsImage from "./assets/actions-logs.png";
+import actionsImageWhite from "./assets/actions-logs-white.png";
 import jobHistoryImage from "./assets/job-history.png";
+import jobHistoryImageWhite from "./assets/job-history-white.png";
 import emailInboxImage from "./assets/email-inbox.png";
 import githubIssueImage from "./assets/github-issue.png";
+import githubIssueImageWhite from "./assets/github-issue-white.png";
 
 type Theme = "light" | "dark";
 const STORAGE_KEY = "jfa_theme";
@@ -240,7 +245,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={secretsImage}
+                        src={isDark ? secretsImage : secretsImageWhite}
                         alt="GitHub Secrets setup"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -257,7 +262,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={variablesImage}
+                        src={isDark ? variablesImage : variablesImageWhite}
                         alt="GitHub Variables setup"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -278,7 +283,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={actionsImage}
+                        src={isDark ? actionsImage : actionsImageWhite}
                         alt="Automated discovery screenshot 1"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -296,7 +301,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={jobHistoryImage}
+                        src={isDark ? jobHistoryImage : jobHistoryImageWhite}
                         alt="Automated discovery screenshot 2"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -334,7 +339,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={githubIssueImage}
+                        src={isDark ? githubIssueImage : githubIssueImageWhite}
                         alt="GitHub Issue with weekly report"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
