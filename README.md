@@ -89,7 +89,7 @@ Docker ensures you run in the exact same environment as the GitHub Action.
 
 ## GitHub Actions Workflow
 
-The project includes a workflow (`.github/workflows/workflow.yml`) that automates the job search.
+The project includes a workflow (`.github/workflows/job_finder.yml`) that automates the job search.
 
 ### How it Works
 
