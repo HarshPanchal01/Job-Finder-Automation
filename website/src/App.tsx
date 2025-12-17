@@ -137,7 +137,7 @@ export default function App() {
               {/* knob */}
               <span
                 className={[
-                  "h-7 w-7 rounded-full transition-transform",
+                  "h-7 w-7 rounded-full transition-transform hover:cursor-pointer",
                   "bg-yellow-400/90",
                   isDark ? "translate-x-0" : "translate-x-5",
                 ].join(" ")}
