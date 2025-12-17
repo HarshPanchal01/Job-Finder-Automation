@@ -5,7 +5,8 @@ import weeklyReportGIF from "./assets/CleanWeeklyReportAnimation.gif";
 import automatedDiscoveryGIF from "./assets/AutomatedDiscoveryAnimation.gif";
 import pythonLogo from "./assets/python-logo-only.png";
 import serpapiLogo from "./assets/serpapi-logo.png";
-import githubLogo from "./assets/github-mark-white.png";
+import githubLogoWhite from "./assets/github-mark-white.png";
+import githubLogoDark from "./assets/github-mark-dark.png";
 import dockerLogo from "./assets/docker-mark-blue.png";
 import secretsImage from "./assets/secrets.png";
 import variablesImage from "./assets/variables.png";
@@ -440,7 +441,7 @@ export default function App() {
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 flex items-center justify-center">
                   <img
-                    src={githubLogo}
+                    src={isDark ? githubLogoWhite : githubLogoDark}
                     alt="GitHub"
                     className="max-w-full max-h-full object-contain"
                   />
