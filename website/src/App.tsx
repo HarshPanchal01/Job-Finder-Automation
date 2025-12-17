@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "./assets/automationLogo.png";
-import configureGIF from "./assets/ConfigureAnimation.gif";
-import weeklyReportGIF from "./assets/CleanWeeklyReportAnimation.gif";
-import automatedDiscoveryGIF from "./assets/AutomatedDiscoveryAnimation.gif";
+import configureGIF from "./assets/ConfigureAnimationDark.gif";
+import configureGIFWhite from "./assets/ConfigureAnimationWhite.gif";
+import weeklyReportGIF from "./assets/CleanWeeklyReportAnimationDark.gif";
+import weeklyReportGIFWhite from "./assets/CleanWeeklyReportAnimationWhite.gif";
+import automatedDiscoveryGIF from "./assets/AutomatedDiscoveryAnimationDark.gif";
+import automatedDiscoveryGIFWhite from "./assets/AutomatedDiscoveryAnimationWhite.gif";
 import pythonLogo from "./assets/python-logo-only.png";
 import serpapiLogo from "./assets/serpapi-logo.png";
 import githubLogoWhite from "./assets/github-mark-white.png";
@@ -191,19 +194,19 @@ export default function App() {
             {
               title: "Configure once",
               text: "Define search queries, locations, salary limits, and filters using environment variables.",
-              gif: configureGIF,
+              gif: isDark ? configureGIF : configureGIFWhite,
               alt: "Config setup demo",
             },
             {
               title: "Automated discovery",
               text: "Runs on a schedule, paginates results, and deduplicates aggressively.",
-              gif: automatedDiscoveryGIF,
+              gif: isDark ? automatedDiscoveryGIF : automatedDiscoveryGIFWhite,
               alt: "Pagination and dedupe demo",
             },
             {
               title: "Clean weekly report",
               text: "Delivered as email, GitHub issue, and markdown report.",
-              gif: weeklyReportGIF,
+              gif: isDark ? weeklyReportGIF : weeklyReportGIFWhite,
               alt: "Report output demo",
             },
           ].map((step, i) => (
