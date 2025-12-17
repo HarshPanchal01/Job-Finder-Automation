@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Tailwind v4: make `dark:` respond to a `.dark` class */
+@custom-variant dark (&:where(.dark, .dark *));
+
 html,
 body {
   background-color: rgb(10, 10, 10);
