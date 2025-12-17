@@ -121,16 +121,24 @@ export default function App() {
               GitHub
             </a>
 
+            {/* Theme toggle (slider) */}
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label={
-                isDark ? "Switch to light mode" : "Switch to dark mode"
-              }
-              className="rounded-lg border border-black/15 px-3 py-2 text-neutral-700 hover:border-black/30 transition dark:border-white/15 dark:text-white/80 dark:hover:border-white/30"
-              title={isDark ? "Light mode" : "Dark mode"}
+              role="switch"
+              aria-checked={!isDark} // true when light mode is ON
+              aria-label="Toggle theme"
+              className="group relative inline-flex h-9 w-14 items-center rounded-full border border-black/15 bg-white p-1 transition dark:border-white/15 dark:bg-white/10"
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
             >
-              {isDark ? "☀️" : "🌙"}
+              {/* knob */}
+              <span
+                className={[
+                  "h-7 w-7 rounded-full transition-transform",
+                  "bg-yellow-400/90",
+                  isDark ? "translate-x-0" : "translate-x-5",
+                ].join(" ")}
+              />
             </button>
           </nav>
         </div>
@@ -142,7 +150,7 @@ export default function App() {
           <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-tight">
             Job searching,
             <br />
-            <span className="text-yellow-700/90 dark:text-yellow-200/80">
+            <span className="text-yellow-400/80 dark:text-yellow-200/80">
               without the noise.
             </span>
           </h1>
@@ -222,7 +230,7 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(secretsImage)}
-                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
+                    className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Add GitHub secrets (Click to expand)
@@ -239,7 +247,7 @@ export default function App() {
 
                   <div
                     onClick={() => setExpandedImage(variablesImage)}
-                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
+                    className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Add GitHub variables (Click to expand)
@@ -260,7 +268,7 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(actionsImage)}
-                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
+                    className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Filtering logs (Click to expand)
@@ -277,7 +285,7 @@ export default function App() {
 
                   <div
                     onClick={() => setExpandedImage(jobHistoryImage)}
-                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
+                    className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Job history for deduplication in subsequent runs (Click to
@@ -299,7 +307,7 @@ export default function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
                     onClick={() => setExpandedImage(emailInboxImage)}
-                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
+                    className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Delivered to your email inbox (Click to expand)
@@ -316,7 +324,7 @@ export default function App() {
 
                   <div
                     onClick={() => setExpandedImage(githubIssueImage)}
-                    className="overflow-hidden rounded-2xl border border-black/10 bg-black/5 p-4 cursor-pointer hover:border-black/30 hover:bg-black/10 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
+                    className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
                       Delivered as a GitHub issue (Click to expand)
@@ -351,7 +359,7 @@ export default function App() {
             Built for people who prefer simple efficient solutions.
           </p>
 
-          <div className="mt-10 relative h-[340px] overflow-hidden rounded-2xl border border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
+          <div className="mt-10 relative h-[340px] overflow-hidden rounded-2xl border border-black/10 bg-gray-50 dark:border-white/10 dark:bg-white/5">
             {/* fade masks */}
             <div className="pointer-events-none absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent z-10 dark:from-neutral-950" />
             <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent z-10 dark:from-neutral-950" />
@@ -385,7 +393,7 @@ export default function App() {
               ].map((t, i) => (
                 <div
                   key={i}
-                  className="rounded-xl border border-black/10 bg-black/10 p-4 backdrop-blur dark:border-white/10 dark:bg-white/10"
+                  className="rounded-xl border border-black/5 bg-gray-100 p-4 backdrop-blur dark:border-white/10 dark:bg-white/10"
                 >
                   <p className="text-lg text-neutral-900 dark:text-white/90">
                     {t.quote}
