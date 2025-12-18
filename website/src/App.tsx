@@ -237,7 +237,7 @@ export default function App() {
               {i === 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
-                    onClick={() => setExpandedImage(secretsImage)}
+                    onClick={() => isDark ? setExpandedImage(secretsImage) : setExpandedImage(secretsImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -254,7 +254,7 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => setExpandedImage(variablesImage)}
+                    onClick={() => isDark ? setExpandedImage(variablesImage) : setExpandedImage(variablesImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -275,7 +275,7 @@ export default function App() {
               {i === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
-                    onClick={() => setExpandedImage(actionsImage)}
+                    onClick={() => isDark ? setExpandedImage(actionsImage) : setExpandedImage(actionsImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -292,7 +292,7 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => setExpandedImage(jobHistoryImage)}
+                    onClick={() => isDark ? setExpandedImage(jobHistoryImage) : setExpandedImage(jobHistoryImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -331,7 +331,7 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => setExpandedImage(githubIssueImage)}
+                    onClick={() => isDark ? setExpandedImage(githubIssueImage) : setExpandedImage(githubIssueImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
