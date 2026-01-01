@@ -149,6 +149,14 @@ You don't need to change code! Just update your `.env` file or GitHub Repository
 
 ---
 
+## How to View the .md File in a Browser with Formatting
+<img width="915" height="165" alt="image" src="https://github.com/user-attachments/assets/58868cc8-f8d6-4152-93a3-835f94fc28dc" />  
+
+You might want to do this if you're having the issue shown above. Even if you follow the steps shown in the note, you will have to view the files in a code editor(specifically the markdown file) or some other editor to get clickable links again. Unless you want to have to always copy-paste the links into a browser everytime you want to apply for a job, rather then just having clickable links, there's an easier way to solve this problem.
+The best thing to do is to download the [Markdown Viewer](https://chromewebstore.google.com/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk) extension. Follow the youtube tutorial shown in the page when you navigate to the link. Then just use this extension to view the .md files in your browser, properly formatted, and with clickable links. 
+
+---
+
 ## License
 
 Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
