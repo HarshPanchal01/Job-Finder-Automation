@@ -29,6 +29,10 @@ def test_config_defaults(mock_env):
     assert config.exclude_keywords == []
     assert config.schedule_types == ["full-time"]
     assert config.queries == ["software developer"]
+    assert config.smtp_server == "smtp.gmail.com"
+    assert config.smtp_port == 587
+    assert config.email_address is None
+    assert config.email_receivers == []
     logging.info("Config defaults test passed.")
 
 def test_config_env_vars(mock_env):
@@ -44,7 +48,12 @@ def test_config_env_vars(mock_env):
         "MAX_DAYS_OLD": "14",
         "BLACKLIST_COMPANIES": '["Bad Corp", "Spam Inc"]',
         "EXCLUDE_KEYWORDS": '["Senior", "Lead"]',
-        "SCHEDULE_TYPES": '["Part-time", "Contract"]'
+        "SCHEDULE_TYPES": '["Part-time", "Contract"]',
+        "SMTP_SERVER": "smtp.test.com",
+        "SMTP_PORT": "465",
+        "EMAIL_ADDRESS": "sender@test.com",
+        "EMAIL_PASSWORD": "password123",
+        "EMAIL_RECEIVER": '["rec1@test.com", "rec2@test.com"]'
     }):
         config = Config()
         assert config.api_key == "test_key"
@@ -57,6 +66,11 @@ def test_config_env_vars(mock_env):
         assert config.blacklist_companies == ["Bad Corp", "Spam Inc"]
         assert config.exclude_keywords == ["Senior", "Lead"]
         assert config.schedule_types == ["Part-time", "Contract"]
+        assert config.smtp_server == "smtp.test.com"
+        assert config.smtp_port == 465
+        assert config.email_address == "sender@test.com"
+        assert config.email_password == "password123"
+        assert config.email_receivers == ["rec1@test.com", "rec2@test.com"]
     logging.info("Config environment variables test passed.")
 
 def test_config_locations_single_string(mock_env):
