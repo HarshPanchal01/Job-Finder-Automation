@@ -7,6 +7,7 @@ from file_manager import FileManager
 from job_history import JobHistory
 from job_parser import JobParser
 from job_filter import JobFilter
+from email_notification import EmailNotification
 from utils import format_location_for_query
 
 # Configure logging
@@ -129,6 +130,30 @@ def main():
     history.cleanup_old_entries()
     
     logging.info(f"Total SerpApi calls made in this session: {finder.total_api_calls}")
+
+    # Send Email Notification
+    if config.email_address and config.email_password:
+        logging.info("Email configuration found. Sending notification...")
+        email_notifier = EmailNotification(
+            config.smtp_server,
+            config.smtp_port,
+            config.email_address,
+            config.email_password
+        )
+        
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:00")
+        subject = f"Weekly Jobs Report - {timestamp}"
+        
+        # Use jobs.md for the email body as it contains the full report
+        email_notifier.send_email(
+            config.email_receivers,
+            subject,
+            "jobs.md"
+        )
+    else:
+        logging.info("Email configuration not found. Skipping email notification.")
+
     logging.info("Automation completed successfully.")
 
 if __name__ == "__main__":

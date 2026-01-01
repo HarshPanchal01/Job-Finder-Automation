@@ -94,6 +94,9 @@ jobs:
           GOOGLE_DOMAIN: ${{ inputs.google_domain || vars.GOOGLE_DOMAIN }}
           GL: ${{ inputs.gl || vars.GL }}
           HL: ${{ inputs.hl || vars.HL }}
+          EMAIL_ADDRESS: ${{ vars.EMAIL_ADDRESS }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECEIVER: ${{ vars.EMAIL_RECEIVER }}
         run: |
           # Create a .env file to pass variables easily to Docker
           echo "API_KEY=$API_KEY" >> .env
@@ -109,6 +112,9 @@ jobs:
           echo "GOOGLE_DOMAIN=$GOOGLE_DOMAIN" >> .env
           echo "GL=$GL" >> .env
           echo "HL=$HL" >> .env
+          echo "EMAIL_ADDRESS=$EMAIL_ADDRESS" >> .env
+          echo "EMAIL_PASSWORD=$EMAIL_PASSWORD" >> .env
+          echo "EMAIL_RECEIVER=$EMAIL_RECEIVER" >> .env
 
           # Run the container
           # -v ${{ github.workspace }}:/app maps the current runner directory to /app in container
@@ -167,7 +173,6 @@ jobs:
           title: Weekly Job Search Results
           content-filepath: ./summary.md
           labels: Automation-Email
-          assignees: HarshPanchal01, anmolp476, JamesMeta
 
       - name: Close created issue
         env:

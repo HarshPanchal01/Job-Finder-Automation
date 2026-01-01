@@ -77,6 +77,25 @@ class Config:
             # Default trusted domains
             self.trusted_domains = ["linkedin", "glassdoor", "indeed", "ziprecruiter", "simplyhired"]
 
+        # Email Configuration
+        self.smtp_server = os.getenv("SMTP_SERVER") or "smtp.gmail.com"
+        try:
+            self.smtp_port = int(os.getenv("SMTP_PORT") or 587)
+        except ValueError:
+            self.smtp_port = 587
+            
+        self.email_address = os.getenv("EMAIL_ADDRESS")
+        self.email_password = os.getenv("EMAIL_PASSWORD")
+        
+        # Handle multiple receivers
+        receivers_str = os.getenv("EMAIL_RECEIVER")
+        if receivers_str:
+            self.email_receivers = self._parse_list(receivers_str)
+        elif self.email_address:
+            self.email_receivers = [self.email_address]
+        else:
+            self.email_receivers = []
+
     def _parse_list(self, env_str):
         """Parses a JSON list string or comma-separated string into a list."""
         if not env_str:
