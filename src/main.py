@@ -148,12 +148,15 @@ def main():
         from datetime import datetime
         report_date = datetime.now().strftime("%Y-%m-%d")
         subject = f"Weekly Jobs Report - {report_date}"
+
+        github_issues_url = "https://github.com/HarshPanchal01/Job-Finder-Automation/issues?q=is%3Aissue%20state%3Aclosed"
         
         # Use jobs.md for the email body as it contains the full report
         email_notifier.send_email(
             config.email_receivers,
             subject,
-            "jobs.md"
+            "jobs.md",
+            github_issue_url=github_issues_url,
         )
     else:
         logging.info("Email configuration not found. Skipping email notification.")

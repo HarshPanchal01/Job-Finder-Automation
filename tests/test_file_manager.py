@@ -102,5 +102,5 @@ def test_save_summary_markdown():
         assert "### City X (1)" not in written_content
         assert "<details>" not in written_content
         assert "Dev" not in written_content # Title shouldn't be there
-        assert "Please download the `jobs-report` artifact" in written_content
+        assert "Please download the `job-reports` artifact" in written_content
     logging.info("save_summary_markdown test passed.")

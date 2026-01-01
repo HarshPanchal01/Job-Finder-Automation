@@ -115,7 +115,6 @@ jobs:
           echo "EMAIL_ADDRESS=$EMAIL_ADDRESS" >> .env
           echo "EMAIL_PASSWORD=$EMAIL_PASSWORD" >> .env
           echo "EMAIL_RECEIVER=$EMAIL_RECEIVER" >> .env
-          echo "SKIP_EMAIL=true" >> .env
 
           # Run the container
           # -v ${{ github.workspace }}:/app maps the current runner directory to /app in container
@@ -174,35 +173,6 @@ jobs:
           title: Weekly Job Search Results
           content-filepath: ./summary.md
           labels: Automation-Email
-
-      - name: Send Email (with GitHub link)
-        env:
-          GITHUB_ISSUE_URL: https://github.com/${{ github.repository }}/issues/${{ steps.create-issue.outputs.issue-number }}
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/app --env-file .env -e GITHUB_ISSUE_URL="$GITHUB_ISSUE_URL" job-finder python - <<'PY'
-          import os
-          import sys
-          from datetime import datetime
-
-          sys.path.append("src")
-          from email_notification import EmailNotification
-
-          smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-          smtp_port = int(os.getenv("SMTP_PORT", "587"))
-          sender_email = os.getenv("EMAIL_ADDRESS")
-          sender_password = os.getenv("EMAIL_PASSWORD")
-
-          receivers = os.getenv("EMAIL_RECEIVER", "")
-          receiver_emails = [r.strip() for r in receivers.split(",") if r.strip()]
-
-          github_issue_url = os.getenv("GITHUB_ISSUE_URL")
-
-          report_date = datetime.now().strftime("%Y-%m-%d")
-          subject = f"Weekly Jobs Report - {report_date}"
-
-          notifier = EmailNotification(smtp_server, smtp_port, sender_email, sender_password)
-          notifier.send_email(receiver_emails, subject, "jobs.md", github_issue_url=github_issue_url)
-          PY
 
       - name: Close created issue
         env:

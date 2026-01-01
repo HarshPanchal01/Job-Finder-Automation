@@ -137,3 +137,7 @@ def test_main_email_subject_date_only(
     args, _kwargs = email_instance.send_email.call_args
     assert args[1] == "Weekly Jobs Report - 2026-01-01"
     assert args[2] == "jobs.md"
+
+    kwargs = email_instance.send_email.call_args.kwargs
+    assert "github_issue_url" in kwargs
+    assert kwargs["github_issue_url"].startswith("https://github.com/HarshPanchal01/Job-Finder-Automation/issues")

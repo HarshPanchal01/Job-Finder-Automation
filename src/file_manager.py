@@ -48,7 +48,7 @@ class FileManager:
                 count = len(jobs_by_location[location])
                 f.write(f"| {location} | {count} |\n")
             f.write("\n---\n\n")
-            f.write("**Note:** The full report is too long to display here. Please download the `jobs-report` artifact from the Workflow Run to see all job details.\n")
+            f.write("**Note:** The full report is too long to display here. Please download the `job-reports` artifact from the Workflow Run to see all job details.\n")
         
         logging.info(f"Job results summary saved to {filename}")
 
