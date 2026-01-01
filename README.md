@@ -13,7 +13,8 @@ A Python-based automation tool that scrapes job listings from Google Jobs via Se
   - **Sources**: Filters for reputable sources (e.g., LinkedIn, Indeed).
 - **Deduplication**: Tracks job history to ensure you never see the same job twice.
 - **Reporting**: Generates a Markdown summary and a JSON data file.
-- **CI/CD Integration**: Runs weekly on GitHub Actions and creates a GitHub Issue with the results.
+- **Email Notifications**: Sends a full "Weekly Jobs Report" directly to your inbox with timestamped subjects.
+- **CI/CD Integration**: Runs weekly on GitHub Actions, sending emails and archiving results in GitHub Issues.
 - **Dockerized**: Consistent environment for development and deployment.
 
 ---
@@ -37,6 +38,11 @@ The application is configured using environment variables.
 | `GOOGLE_DOMAIN`       | Google domain to use.                                       | `google.ca`                                                          |
 | `GL`                  | Country code.                                               | `ca`                                                                 |
 | `HL`                  | Language code.                                              | `en`                                                                 |
+| `EMAIL_ADDRESS`       | Sender email address for notifications.                     | `None`                                                               |
+| `EMAIL_PASSWORD`      | App password/Secret for the sender email.                   | `None`                                                               |
+| `EMAIL_RECEIVER`      | List of recipient emails (JSON list or comma-separated).    | Defaults to `EMAIL_ADDRESS`                                          |
+| `SMTP_SERVER`         | SMTP server for sending emails.                             | `smtp.gmail.com`                                                     |
+| `SMTP_PORT`           | SMTP port (usually 587 for TLS or 465 for SSL).             | `587`                                                                |
 
 ---
 
@@ -77,6 +83,8 @@ Docker ensures you run in the exact same environment as the GitHub Action.
 3.  **Configure**: Create a `.env` file in the root directory.
     ```env
     API_KEY=your_serpapi_key
+    EMAIL_ADDRESS=your_email@gmail.com
+    EMAIL_PASSWORD=your_app_password
     SEARCH_QUERIES=["python developer", "backend engineer"]
     LOCATIONS=["New York, NY"]
     ```
@@ -102,14 +110,16 @@ The project includes a workflow (`.github/workflows/job_finder.yml`) that automa
 4.  **Artifacts**:
     - `jobs.json`: Raw data of found jobs.
     - `jobs.md`: Formatted report.
-5.  **Notification**: Creates a **GitHub Issue** in the repository with the contents of `jobs.md` and assigns it to you.
+5.  **Notification**: 
+    - Sends a **Weekly Jobs Report** email to your specified receivers.
+    - Creates a **GitHub Issue** as an archive of the weekly search results.
 6.  **History Update**: Commits the new job IDs back to the `job-history-data` branch to prevent duplicates next week.
 
 ### Setup
 
 1.  Go to **Settings** > **Secrets and variables** > **Actions**.
-2.  Add `API_KEY` as a **Repository Secret**.
-3.  Add other config (e.g., `SEARCH_QUERIES`) as **Repository Variables**.
+2.  Add `API_KEY` and `EMAIL_PASSWORD` as **Repository Secrets**.
+3.  Add `EMAIL_ADDRESS`, `EMAIL_RECEIVER`, and other config (e.g., `SEARCH_QUERIES`) as **Repository Variables**.
 
 ---
 
@@ -146,14 +156,6 @@ Contributions are welcome!
 ### Adding New Queries/Locations
 
 You don't need to change code! Just update your `.env` file or GitHub Repository Variables.
-
----
-
-## How to View the .md File in a Browser with Formatting
-<img width="915" height="165" alt="image" src="https://github.com/user-attachments/assets/58868cc8-f8d6-4152-93a3-835f94fc28dc" />  
-
-You might want to do this if you're having the issue shown above. Even if you follow the steps shown in the note, you will have to view the files in a code editor(specifically the markdown file) or some other editor to get clickable links again. Unless you want to have to always copy-paste the links into a browser everytime you want to apply for a job, rather then just having clickable links, there's an easier way to solve this problem.
-The best thing to do is to download the [Markdown Viewer](https://chromewebstore.google.com/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk) extension. Follow the youtube tutorial shown in the page when you navigate to the link. Then just use this extension to view the .md files in your browser, properly formatted, and with clickable links. 
 
 ---
 
