@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import MagicMock, patch, mock_open
+from email import message_from_string
 from email_notification import EmailNotification
 
 @pytest.fixture
@@ -22,6 +23,20 @@ def test_send_email_success(email_notifier):
         mock_smtp_instance.starttls.assert_called_once()
         mock_smtp_instance.login.assert_called_with("sender@test.com", "password")
         mock_smtp_instance.sendmail.assert_called_once()
+
+        sent_message = mock_smtp_instance.sendmail.call_args.args[2]
+        parsed = message_from_string(sent_message)
+        assert parsed.get_content_type() == "multipart/alternative"
+
+        parts = parsed.get_payload()
+        assert len(parts) == 2
+        assert parts[0].get_content_type() == "text/plain"
+        assert parts[1].get_content_type() == "text/html"
+
+        html_bytes = parts[1].get_payload(decode=True)
+        html_text = html_bytes.decode("utf-8")
+        assert "<!doctype html>" in html_text
+        assert "Test Body" in html_text
         mock_smtp_instance.quit.assert_called_once()
 
 def test_send_email_ssl(email_notifier):
@@ -42,6 +57,20 @@ def test_send_email_ssl(email_notifier):
         mock_smtp_instance.login.assert_called_with("sender@test.com", "password")
         mock_smtp_instance.sendmail.assert_called_once()
 
+        sent_message = mock_smtp_instance.sendmail.call_args.args[2]
+        parsed = message_from_string(sent_message)
+        assert parsed.get_content_type() == "multipart/alternative"
+
+        parts = parsed.get_payload()
+        assert len(parts) == 2
+        assert parts[0].get_content_type() == "text/plain"
+        assert parts[1].get_content_type() == "text/html"
+
+        html_bytes = parts[1].get_payload(decode=True)
+        html_text = html_bytes.decode("utf-8")
+        assert "<!doctype html>" in html_text
+        assert "Test Body" in html_text
+
 def test_send_email_multiple_receivers(email_notifier):
     """Test sending email to multiple receivers."""
     receivers = ["rec1@test.com", "rec2@test.com"]
@@ -59,6 +88,36 @@ def test_send_email_multiple_receivers(email_notifier):
         calls = mock_smtp_instance.sendmail.call_args_list
         assert calls[0].args[1] == "rec1@test.com"
         assert calls[1].args[1] == "rec2@test.com"
+
+        parsed_1 = message_from_string(calls[0].args[2])
+        parsed_2 = message_from_string(calls[1].args[2])
+        assert parsed_1.get_content_type() == "multipart/alternative"
+        assert parsed_2.get_content_type() == "multipart/alternative"
+
+        assert parsed_1.get_payload()[1].get_content_type() == "text/html"
+        assert parsed_2.get_payload()[1].get_content_type() == "text/html"
+
+
+def test_send_email_markdown_tables_render_to_html(email_notifier):
+    """Ensure markdown tables become HTML tables for email clients like Gmail."""
+    markdown_body = "# Title\n\n| a | b |\n| - | - |\n| 1 | 2 |\n"
+
+    with (
+        patch("builtins.open", mock_open(read_data=markdown_body)),
+        patch("smtplib.SMTP") as MockSMTP,
+        patch("os.path.exists", return_value=True)
+    ):
+        mock_smtp_instance = MockSMTP.return_value
+        email_notifier.send_email("receiver@test.com", "Subject", "test_file.md")
+
+        sent_message = mock_smtp_instance.sendmail.call_args.args[2]
+        parsed = message_from_string(sent_message)
+        html_part = parsed.get_payload()[1]
+        assert html_part.get_content_type() == "text/html"
+
+        html_bytes = html_part.get_payload(decode=True)
+        html_text = html_bytes.decode("utf-8")
+        assert "<table" in html_text
 
 def test_send_email_missing_credentials():
     """Test that email is skipped if credentials are missing."""

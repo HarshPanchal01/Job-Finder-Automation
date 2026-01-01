@@ -1,4 +1,5 @@
 dotenv
 google-search-results
+markdown
 pytest
 pytest-mock

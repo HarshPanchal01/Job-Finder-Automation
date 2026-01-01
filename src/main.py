@@ -142,8 +142,8 @@ def main():
         )
         
         from datetime import datetime
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:00")
-        subject = f"Weekly Jobs Report - {timestamp}"
+        report_date = datetime.now().strftime("%Y-%m-%d")
+        subject = f"Weekly Jobs Report - {report_date}"
         
         # Use jobs.md for the email body as it contains the full report
         email_notifier.send_email(

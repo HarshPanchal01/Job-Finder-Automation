@@ -22,6 +22,8 @@ def test_main_multiple_queries(mock_shutil_copy, mock_getsize, mock_file_manager
     mock_config.max_pages = 1
     mock_config.min_salary = 0
     mock_config.max_days_old = 30
+    mock_config.email_address = None
+    mock_config.email_password = None
     mock_config_class.return_value = mock_config
     
     # Setup mock finder
@@ -73,3 +75,65 @@ def test_main_multiple_queries(mock_shutil_copy, mock_getsize, mock_file_manager
     args4, _ = calls[3]
     assert args4[0]["q"] == "query2 near loc2"
     assert args4[0]["location"] == "loc2"
+
+
+@patch("main.EmailNotification")
+@patch("datetime.datetime")
+@patch("main.Config")
+@patch("main.JobFinder")
+@patch("main.JobHistory")
+@patch("main.JobFilter")
+@patch("main.FileManager")
+@patch("os.path.getsize")
+@patch("shutil.copy")
+def test_main_email_subject_date_only(
+    mock_shutil_copy,
+    mock_getsize,
+    mock_file_manager,
+    mock_job_filter,
+    mock_job_history,
+    mock_job_finder,
+    mock_config_class,
+    mock_datetime,
+    mock_email_notification,
+):
+    mock_config = MagicMock()
+    mock_config.api_key = "test_key"
+    mock_config.queries = []
+    mock_config.locations = []
+    mock_config.search_params = {"q": "default", "location": "default"}
+    mock_config.max_pages = 1
+    mock_config.min_salary = 0
+    mock_config.max_days_old = 30
+    mock_config.smtp_server = "smtp.test.com"
+    mock_config.smtp_port = 587
+    mock_config.email_address = "sender@test.com"
+    mock_config.email_password = "password"
+    mock_config.email_receivers = ["receiver@test.com"]
+    mock_config_class.return_value = mock_config
+
+    mock_finder_instance = MagicMock()
+    mock_finder_instance.search_jobs.return_value = []
+    mock_finder_instance.removeDuplicates.return_value = []
+    mock_job_finder.return_value = mock_finder_instance
+
+    mock_history_instance = MagicMock()
+    mock_history_instance.is_seen.return_value = False
+    mock_job_history.return_value = mock_history_instance
+
+    mock_filter_instance = MagicMock()
+    mock_filter_instance.is_valid.return_value = (True, "Valid")
+    mock_job_filter.return_value = mock_filter_instance
+
+    mock_getsize.return_value = 1000
+
+    mock_datetime.now.return_value.strftime.return_value = "2026-01-01"
+
+    main()
+
+    email_instance = mock_email_notification.return_value
+    email_instance.send_email.assert_called_once()
+
+    args, _kwargs = email_instance.send_email.call_args
+    assert args[1] == "Weekly Jobs Report - 2026-01-01"
+    assert args[2] == "jobs.md"

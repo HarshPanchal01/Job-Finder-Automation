@@ -3,8 +3,20 @@ import logging
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import markdown
 
 class EmailNotification:
+    @staticmethod
+    def markdown_to_html(markdown_text: str) -> str:
+        return markdown.markdown(
+            markdown_text,
+            extensions=[
+                "tables",
+                "fenced_code",
+                "sane_lists",
+            ],
+        )
+
     def __init__(self, smtp_server, smtp_port, sender_email, sender_password):
         self.smtp_server = smtp_server
         self.smtp_port = smtp_port
@@ -31,6 +43,14 @@ class EmailNotification:
             logging.error(f"Failed to read file {body_file_path}: {e}")
             return
 
+        html_body = self.markdown_to_html(body_content)
+        html_doc = (
+            "<!doctype html>"
+            "<html><head><meta charset='utf-8'></head><body>"
+            f"{html_body}"
+            "</body></html>"
+        )
+
         # Normalize to list
         if isinstance(receiver_emails, str):
             receiver_emails = [receiver_emails]
@@ -51,11 +71,13 @@ class EmailNotification:
             server.login(self.sender_email, self.sender_password)
 
             for receiver_email in receiver_emails:
-                msg = MIMEMultipart()
+                msg = MIMEMultipart('alternative')
                 msg['From'] = self.sender_email
                 msg['To'] = receiver_email
                 msg['Subject'] = subject
-                msg.attach(MIMEText(body_content, 'plain'))
+
+                msg.attach(MIMEText(body_content, 'plain', 'utf-8'))
+                msg.attach(MIMEText(html_doc, 'html', 'utf-8'))
                 
                 text = msg.as_string()
                 server.sendmail(self.sender_email, receiver_email, text)
