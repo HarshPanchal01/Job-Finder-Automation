@@ -1,6 +1,7 @@
 import smtplib
 import logging
 import os
+import re
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import markdown
@@ -8,8 +9,20 @@ import markdown
 class EmailNotification:
     @staticmethod
     def markdown_to_html(markdown_text: str) -> str:
+        # Email clients (notably Gmail) either don't support <details>/<summary>
+        # or render markdown inside them poorly. Convert them into normal markdown
+        # so python-markdown can render headings/lists/links properly.
+        processed = re.sub(r"\s*<details>\s*", "\n\n", markdown_text)
+        processed = re.sub(r"\s*</details>\s*", "\n\n", processed)
+        processed = re.sub(
+            r"<summary>(.*?)</summary>",
+            lambda m: f"\n\n**{m.group(1).strip()}**\n\n",
+            processed,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+
         return markdown.markdown(
-            markdown_text,
+            processed,
             extensions=[
                 "tables",
                 "fenced_code",
@@ -23,7 +36,7 @@ class EmailNotification:
         self.sender_email = sender_email
         self.sender_password = sender_password
 
-    def send_email(self, receiver_emails, subject, body_file_path):
+    def send_email(self, receiver_emails, subject, body_file_path, github_issue_url: str | None = None):
         """
         Reads the content of the file at body_file_path and sends it to each email in receiver_emails.
         receiver_emails can be a string or a list of strings.
@@ -42,6 +55,9 @@ class EmailNotification:
         except Exception as e:
             logging.error(f"Failed to read file {body_file_path}: {e}")
             return
+
+        if github_issue_url:
+            body_content = f"[View on GitHub]({github_issue_url})\n\n" + body_content
 
         html_body = self.markdown_to_html(body_content)
         html_doc = (

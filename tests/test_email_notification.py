@@ -119,6 +119,58 @@ def test_send_email_markdown_tables_render_to_html(email_notifier):
         html_text = html_bytes.decode("utf-8")
         assert "<table" in html_text
 
+
+def test_send_email_details_summary_are_preprocessed(email_notifier):
+    """<details>/<summary> blocks should not break markdown rendering in email HTML."""
+    md = (
+        "<details>\n"
+        "<summary>Click to view 1 job</summary>\n\n"
+        "#### Role\n"
+        "- [**Apply Now**](https://example.com/apply)\n"
+        "</details>\n"
+    )
+
+    with (
+        patch("builtins.open", mock_open(read_data=md)),
+        patch("smtplib.SMTP") as MockSMTP,
+        patch("os.path.exists", return_value=True),
+    ):
+        mock_smtp_instance = MockSMTP.return_value
+        email_notifier.send_email("receiver@test.com", "Subject", "test_file.md")
+
+        sent_message = mock_smtp_instance.sendmail.call_args.args[2]
+        parsed = message_from_string(sent_message)
+        html_part = parsed.get_payload()[1]
+        html_text = html_part.get_payload(decode=True).decode("utf-8")
+
+        # Should render a real anchor with short text, not a raw URL or markdown.
+        assert "<a" in html_text
+        assert ">Apply Now<" in html_text
+        assert "https://example.com/apply" in html_text
+
+
+def test_send_email_includes_view_on_github_link(email_notifier):
+    with (
+        patch("builtins.open", mock_open(read_data="# Report\n")),
+        patch("smtplib.SMTP") as MockSMTP,
+        patch("os.path.exists", return_value=True),
+    ):
+        mock_smtp_instance = MockSMTP.return_value
+        email_notifier.send_email(
+            "receiver@test.com",
+            "Subject",
+            "test_file.md",
+            github_issue_url="https://github.com/org/repo/issues/123",
+        )
+
+        sent_message = mock_smtp_instance.sendmail.call_args.args[2]
+        parsed = message_from_string(sent_message)
+        html_part = parsed.get_payload()[1]
+        html_text = html_part.get_payload(decode=True).decode("utf-8")
+
+        assert "View on GitHub" in html_text
+        assert "https://github.com/org/repo/issues/123" in html_text
+
 def test_send_email_missing_credentials():
     """Test that email is skipped if credentials are missing."""
     notifier = EmailNotification("smtp.test.com", 587, None, None)

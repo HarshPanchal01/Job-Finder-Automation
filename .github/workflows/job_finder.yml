@@ -53,7 +53,7 @@ on:
         description: "HL (Language Code)"
         required: false
         type: string
-  
+
 permissions:
   issues: write
   contents: write
@@ -115,6 +115,7 @@ jobs:
           echo "EMAIL_ADDRESS=$EMAIL_ADDRESS" >> .env
           echo "EMAIL_PASSWORD=$EMAIL_PASSWORD" >> .env
           echo "EMAIL_RECEIVER=$EMAIL_RECEIVER" >> .env
+          echo "SKIP_EMAIL=true" >> .env
 
           # Run the container
           # -v ${{ github.workspace }}:/app maps the current runner directory to /app in container
@@ -173,6 +174,12 @@ jobs:
           title: Weekly Job Search Results
           content-filepath: ./summary.md
           labels: Automation-Email
+
+      - name: Send Email (with GitHub link)
+        env:
+          GITHUB_ISSUE_URL: https://github.com/${{ github.repository }}/issues/${{ steps.create-issue.outputs.issue-number }}
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/app --env-file .env -e GITHUB_ISSUE_URL="$GITHUB_ISSUE_URL" job-finder python src/send_report_email.py
 
       - name: Close created issue
         env:

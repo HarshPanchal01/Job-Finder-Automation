@@ -132,7 +132,11 @@ def main():
     logging.info(f"Total SerpApi calls made in this session: {finder.total_api_calls}")
 
     # Send Email Notification
-    if config.email_address and config.email_password:
+    skip_email = os.getenv("SKIP_EMAIL", "").strip().lower() in {"1", "true", "yes"}
+
+    if skip_email:
+        logging.info("SKIP_EMAIL enabled. Skipping email notification.")
+    elif config.email_address and config.email_password:
         logging.info("Email configuration found. Sending notification...")
         email_notifier = EmailNotification(
             config.smtp_server,
