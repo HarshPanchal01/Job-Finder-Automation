@@ -82,6 +82,21 @@ def test_job_filter_source_generic_aggregator(mock_config):
     assert is_valid is False
     assert reason == "No reputable application source found"
 
+def test_job_filter_source_domain_filter_disabled_allows_any_source(mock_config):
+    """If trusted domains are disabled, accept any apply option source."""
+    mock_config.trusted_domains = []
+    job_filter = JobFilter(mock_config)
+    job = {
+        "title": "Software Engineer",
+        "company_name": "Tech Corp",
+        "apply_options": [
+            {"title": "Techjobs.ca", "link": "https://www.techjobs.ca/job/..."}
+        ]
+    }
+    is_valid, reason = job_filter.is_valid(job)
+    assert is_valid is True
+    assert reason is None
+
 def test_job_filter_source_no_options(mock_config):
     """Test that a job with no apply options is rejected."""
     job_filter = JobFilter(mock_config)

@@ -71,11 +71,13 @@ class Config:
 
         # Trusted Domains for Application Sources
         trusted_domains_str = os.getenv("TRUSTED_DOMAINS")
-        if trusted_domains_str:
-            self.trusted_domains = self._parse_list(trusted_domains_str)
-        else:
-            # Default trusted domains
+        if trusted_domains_str is None:
+            # Default trusted domains (when env var is not set)
             self.trusted_domains = ["linkedin", "glassdoor", "indeed", "ziprecruiter", "simplyhired"]
+        else:
+            # If TRUSTED_DOMAINS is explicitly set but empty ("" or "[]"), disable filtering.
+            parsed_domains = self._parse_list(trusted_domains_str)
+            self.trusted_domains = parsed_domains if parsed_domains else None
 
         # Email Configuration
         self.smtp_server = os.getenv("SMTP_SERVER") or "smtp.gmail.com"

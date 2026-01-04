@@ -7,7 +7,11 @@ class JobFilter:
         self.blacklist_companies = [c.lower() for c in config.blacklist_companies]
         self.exclude_keywords = [k.lower() for k in config.exclude_keywords]
         self.schedule_types = [s.lower() for s in config.schedule_types]
-        self.trusted_domains = [d.lower() for d in config.trusted_domains]
+        if getattr(config, "trusted_domains", None):
+            self.trusted_domains = [d.lower() for d in config.trusted_domains]
+        else:
+            # None/empty means domain filtering disabled.
+            self.trusted_domains = None
 
     def is_valid(self, job):
         """
@@ -70,6 +74,10 @@ class JobFilter:
             # If there are no apply options, we can't determine if it's reputable or not.
             # Assuming we want to filter these out as "low quality" or "not actionable".
             return False, "No application options found"
+
+        # If domain filtering is disabled, allow all sources.
+        if not self.trusted_domains:
+            return True, None
 
         company_name = job.get('company_name', '').lower()
         # Normalize company name for URL check (remove spaces, punctuation could be tricky but let's start simple)

@@ -29,11 +29,18 @@ def test_config_defaults(mock_env):
     assert config.exclude_keywords == []
     assert config.schedule_types == ["full-time"]
     assert config.queries == ["software developer"]
+    assert config.trusted_domains == ["linkedin", "glassdoor", "indeed", "ziprecruiter", "simplyhired"]
     assert config.smtp_server == "smtp.gmail.com"
     assert config.smtp_port == 587
     assert config.email_address is None
     assert config.email_receivers == []
     logging.info("Config defaults test passed.")
+
+def test_config_trusted_domains_empty_disables_filter(mock_env):
+    """If TRUSTED_DOMAINS is explicitly empty, domain filtering should be disabled."""
+    with patch.dict(os.environ, {"TRUSTED_DOMAINS": ""}):
+        config = Config()
+        assert config.trusted_domains is None
 
 def test_config_env_vars(mock_env):
     """Test that Config loads values from environment variables."""

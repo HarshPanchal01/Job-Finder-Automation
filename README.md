@@ -25,7 +25,7 @@ The application is configured using environment variables.
 
 | Variable              | Description                                                 | Default                                                              |
 | :-------------------- | :---------------------------------------------------------- | :------------------------------------------------------------------- |
-| `API_KEY`             | **Required**. Your [SerpApi](https://serpapi.com/) API Key. | `None`                                                               |
+| `API_KEY` (**Required**)| Your [SerpApi](https://serpapi.com/) API Key. | `None`                                                               |
 | `SEARCH_QUERIES`      | List of job titles to search for.                           | `["software developer"]`                                             |
 | `LOCATIONS`           | List of locations to search in.                             | `["Toronto, Ontario, Canada"]`                                       |
 | `MAX_PAGES`           | Max pages to fetch per query/location.                      | `5`                                                                  |
@@ -38,8 +38,8 @@ The application is configured using environment variables.
 | `GOOGLE_DOMAIN`       | Google domain to use.                                       | `google.ca`                                                          |
 | `GL`                  | Country code.                                               | `ca`                                                                 |
 | `HL`                  | Language code.                                              | `en`                                                                 |
-| `EMAIL_ADDRESS`       | Sender email address for notifications.                     | `None`                                                               |
-| `EMAIL_PASSWORD`      | App password/Secret for the sender email.                   | `None`                                                               |
+| `EMAIL_ADDRESS` (**Required**)| Sender email address for notifications.                     | `None`                                                               |
+| `EMAIL_PASSWORD` (**Required**)| [App password](https://support.google.com/mail/answer/185833?hl=en) for the sender email.                   | `None`                                                               |
 | `EMAIL_RECEIVER`      | List of recipient emails (JSON list or comma-separated).    | Defaults to `EMAIL_ADDRESS`                                          |
 | `SMTP_SERVER`         | SMTP server for sending emails.                             | `smtp.gmail.com`                                                     |
 | `SMTP_PORT`           | SMTP port (usually 587 for TLS or 465 for SSL).             | `587`                                                                |
@@ -85,8 +85,20 @@ Docker ensures you run in the exact same environment as the GitHub Action.
     API_KEY=your_serpapi_key
     EMAIL_ADDRESS=your_email@gmail.com
     EMAIL_PASSWORD=your_app_password
+    EMAIL_RECEIVER=["your_emails_as_receiver(s)@gmail.com", "email_2@gmail.com"]
+    SMTP_SERVER=smtp.gmail.com
+    SMTP_PORT=587
     SEARCH_QUERIES=["python developer", "backend engineer"]
-    LOCATIONS=["New York, NY"]
+    LOCATIONS=["Toronto, Ontario, Canada", "Montreal, Quebec, Canada"]
+    GOOGLE_DOMAIN="google.ca"
+    GL="ca"
+    HL="en"
+    TRUSTED_DOMAINS=["linkedin", "indeed"]
+    MAX_PAGES=5
+    MIN_SALARY=50000
+    SCHEDULE_TYPES=["full-time", "part-time"]
+    BLACKLIST_COMPANIES=["hooli", "pied piper"]
+    EXCLUDE_KEYWORDS=["manager", "co-op"]
     ```
 4.  **Run**:
     ```bash
@@ -101,7 +113,7 @@ The project includes a workflow (`.github/workflows/job_finder.yml`) that automa
 
 ### How it Works
 
-1.  **Schedule**: Runs automatically every Saturday at 14:00 UTC.
+1.  **Schedule**: Runs automatically every Thursday at 1:00 EST.
 2.  **Environment**: Builds a Docker container to ensure reproducibility.
 3.  **Execution**:
     - Fetches job history from a dedicated orphan branch (`job-history-data`).
@@ -143,17 +155,7 @@ This project uses the [SerpApi Google Jobs API](https://serpapi.com/google-jobs-
 
 ---
 
-## Contribution
-
-Contributions are welcome!
-
-1.  **Fork** the repository.
-2.  **Create a branch** (`git checkout -b feature/amazing-feature`).
-3.  **Commit** your changes.
-4.  **Push** to the branch.
-5.  **Open a Pull Request**.
-
-### Adding New Queries/Locations
+## Adding New Queries/Locations
 
 You don't need to change code! Just update your `.env` file or GitHub Repository Variables.
 
