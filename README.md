@@ -1,6 +1,25 @@
 # Job Finder Automation
 
-A Python-based automation tool that scrapes job listings from Google Jobs via SerpApi, filters them based on your preferences (salary, date, keywords), and generates a weekly report. It runs automatically via GitHub Actions or can be run locally using Docker or Python.
+A Python-based automation tool that scrapes job listings from Google Jobs via SerpApi, filters them (salary/date/keywords/etc.), and generates a report. You can either run it manually on your computer **when you want**, or let GitHub run it **on a schedule** and email you automatically.
+
+## Choose how you want to run it
+
+There are two options:
+
+| Setup                          | What it is                  | Runs where       | Runs when                               | Best for                                    |
+| ------------------------------ | --------------------------- | ---------------- | --------------------------------------- | ------------------------------------------- |
+| **Manual (Local)**             | You run the script yourself | Your laptop/PC   | Only when you run a command             | Testing, tweaking filters, one-off runs     |
+| **Scheduled (GitHub Actions)** | GitHub runs it for you      | GitHub’s servers | Automatically on a weekly cron schedule | Automated runs, no input is needed from you |
+
+## Table of Contents
+
+- [Features](#features)
+- [Setup A: Scheduled weekly run (GitHub Actions)](#setup-a-scheduled-weekly-run-github-actions)
+- [Setup B: Manual run on your computer (Local)](#setup-b-manual-run-on-your-computer-local)
+- [Configuration reference (environment variables and secrets)](#configuration-reference-environment-variables-and-secrets)
+- [Search Logic & API](#search-logic--api)
+- [Adding New Queries/Locations](#adding-new-querieslocations)
+- [License](#license)
 
 ## Features
 
@@ -13,125 +32,145 @@ A Python-based automation tool that scrapes job listings from Google Jobs via Se
   - **Sources**: Filters for reputable sources (e.g., LinkedIn, Indeed).
 - **Deduplication**: Tracks job history to ensure you never see the same job twice.
 - **Reporting**: Generates a Markdown summary and a JSON data file.
-- **Email Notifications**: Sends a full "Weekly Jobs Report" directly to your inbox with timestamped subjects.
-- **CI/CD Integration**: Runs weekly on GitHub Actions, sending emails and archiving results in GitHub Issues.
-- **Dockerized**: Consistent environment for development and deployment.
+- **Email Notifications**: Sends a full "Weekly Jobs Report" directly to your inbox.
+- **GitHub Actions Automation**: Can run weekly on a schedule and archive results in GitHub Issues.
+- **Dockerized**: Consistent environment locally and in CI.
 
 ---
 
-## Configuration
+## Setup A: Scheduled weekly run (GitHub Actions)
+
+### What you get
+
+- Weekly (scheduled) run on GitHub’s servers
+- Email report to your inbox
+- Deduplication across weeks via a `job-history-data` branch
+
+### Step-by-step setup
+
+1. **Fork this repo** (so you can store your own secrets/variables).
+2. In your fork, go to **Actions** and click **Enable workflows** (GitHub often disables them by default on new forks).
+3. Go to **Settings → Secrets and variables → Actions**.
+4. Add **Repository Secrets**:
+   - `API_KEY` (your [SerpApi](https://serpapi.com/) key)
+   - `EMAIL_PASSWORD` (your email provider [app-password](https://support.google.com/mail/answer/185833))
+5. Add **Repository Variables** (these are not encrypted, so don’t put passwords here):
+   - `EMAIL_ADDRESS` (sender email)
+   - `EMAIL_RECEIVER` (JSON list or comma-separated string)
+   - Optional config like `SEARCH_QUERIES`, `LOCATIONS`, `MIN_SALARY`, etc. (see [Configuration reference](#configuration-reference-environment-variables-and-secrets))
+
+### Running it now (without waiting a week)
+
+1. Go to **Actions → Job Finder Automation**.
+2. Click **Run workflow**.
+3. (Optional) provide inputs like `search_queries` or `locations` to override the saved variables for that one run.
+
+### Changing the schedule
+
+The schedule is defined in `.github/workflows/job_finder.yml` under `on.schedule.cron`.
+
+- Current cron: `47 4 * * 4` (GitHub cron is interpreted in **UTC**)
+- Use a cron helper like https://crontab.guru/ and convert to your local timezone.
+
+---
+
+## Setup B: Manual run on your computer (Local)
+
+This option is for running the job search **manually**.
+
+### Option 1: Docker (recommended)
+
+Docker is easiest because it matches the GitHub Actions environment.
+
+1. **Install Docker** (Docker Desktop on Windows/Mac, or Docker Engine on Linux).
+2. **Create a `.env` file** in the repo root (see example below).
+3. **Build the image**:
+   ```bash
+   docker build -t job-finder .
+   ```
+4. **Run it** (saves `jobs.md` + `jobs.json` to your folder):
+
+   ```bash
+   # Windows (Command Prompt)
+   docker run --rm -v "%cd%:/app" --env-file .env job-finder
+
+   # Windows (PowerShell)
+   docker run --rm -v "${PWD}:/app" --env-file .env job-finder
+
+   # Linux/WSL/Mac
+   docker run --rm -v "$(pwd):/app" --env-file .env job-finder
+   ```
+
+### Option 2: Python directly
+
+1. **Install Python**: 3.11+
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Create a `.env` file** in the repo root.
+4. **Run**:
+   ```bash
+   python src/main.py
+   ```
+
+### Example `.env`
+
+```env
+API_KEY=your_serpapi_key
+EMAIL_ADDRESS=your_email@gmail.com
+EMAIL_PASSWORD=your_app_password
+
+# JSON list OR comma-separated is supported for lists
+EMAIL_RECEIVER=["you@gmail.com", "other@gmail.com"]
+
+SEARCH_QUERIES=["python developer", "backend engineer"]
+LOCATIONS=["Toronto, Ontario, Canada", "Montreal, Quebec, Canada"]
+
+GOOGLE_DOMAIN=google.ca
+GL=ca
+HL=en
+
+TRUSTED_DOMAINS=["linkedin", "indeed"]
+MAX_PAGES=5
+MIN_SALARY=50000
+MAX_DAYS_OLD=7
+SCHEDULE_TYPES=["full-time", "part-time"]
+BLACKLIST_COMPANIES=["hooli", "pied piper"]
+EXCLUDE_KEYWORDS=["manager", "co-op"]
+```
+
+---
+
+## Configuration reference (environment variables and secrets)
 
 The application is configured using environment variables.
 
-| Variable              | Description                                                 | Default                                                              |
-| :-------------------- | :---------------------------------------------------------- | :------------------------------------------------------------------- |
-| `API_KEY` (**Required**)| Your [SerpApi](https://serpapi.com/) API Key. | `None`                                                               |
-| `SEARCH_QUERIES`      | List of job titles to search for.                           | `["software developer"]`                                             |
-| `LOCATIONS`           | List of locations to search in.                             | `["Toronto, Ontario, Canada"]`                                       |
-| `MAX_PAGES`           | Max pages to fetch per query/location.                      | `5`                                                                  |
-| `MIN_SALARY`          | Minimum annual salary.                                      | `50000`                                                              |
-| `MAX_DAYS_OLD`        | Max age of job posting in days.                             | `7`                                                                  |
-| `BLACKLIST_COMPANIES` | Companies to exclude.                                       | `[]`                                                                 |
-| `EXCLUDE_KEYWORDS`    | Keywords to exclude from titles.                            | `[]`                                                                 |
-| `SCHEDULE_TYPES`      | Allowed schedule types (e.g., Full-time).                   | `["Full-time"]`                                                      |
-| `TRUSTED_DOMAINS`     | Allowed application sources.                                | `["linkedin", "glassdoor", "indeed", "ziprecruiter", "simplyhired"]` |
-| `GOOGLE_DOMAIN`       | Google domain to use.                                       | `google.ca`                                                          |
-| `GL`                  | Country code.                                               | `ca`                                                                 |
-| `HL`                  | Language code.                                              | `en`                                                                 |
-| `EMAIL_ADDRESS` (**Required**)| Sender email address for notifications.                     | `None`                                                               |
-| `EMAIL_PASSWORD` (**Required**)| [App password](https://support.google.com/mail/answer/185833?hl=en) for the sender email.                   | `None`                                                               |
-| `EMAIL_RECEIVER`      | List of recipient emails (JSON list or comma-separated).    | Defaults to `EMAIL_ADDRESS`                                          |
-| `SMTP_SERVER`         | SMTP server for sending emails.                             | `smtp.gmail.com`                                                     |
-| `SMTP_PORT`           | SMTP port (usually 587 for TLS or 465 for SSL).             | `587`                                                                |
+Where you set them depends on how you run it:
 
----
+- **Local**: put them in a `.env` file
+- **GitHub Actions**: put them in **Secrets** and **Variables** (as described above)
 
-## Local Development
-
-### Option 1: Using Docker (Recommended)
-
-Docker ensures you run in the exact same environment as the GitHub Action.
-
-1.  **Prerequisites**: Install Docker Desktop.
-2.  **Build the Image**:
-    ```bash
-    docker build -t job-finder .
-    ```
-3.  **Run the Container**:
-    Create a `.env` file with your config, then run:
-
-    ```bash
-    # Windows (Command Prompt)
-    docker run --rm -v "%cd%:/app" --env-file .env job-finder
-
-    # Windows (PowerShell)
-    docker run --rm -v "${PWD}:/app" --env-file .env job-finder
-
-    # Linux/WSL/Mac
-    docker run --rm -v "$(pwd):/app" --env-file .env job-finder
-    ```
-
-    _The `-v` flag mounts your current directory so `jobs.md` and `jobs.json` are saved to your computer._
-
-### Option 2: Using Python Directly
-
-1.  **Prerequisites**: Python 3.11+
-2.  **Install Dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  **Configure**: Create a `.env` file in the root directory.
-    ```env
-    API_KEY=your_serpapi_key
-    EMAIL_ADDRESS=your_email@gmail.com
-    EMAIL_PASSWORD=your_app_password
-    EMAIL_RECEIVER=["your_emails_as_receiver(s)@gmail.com", "email_2@gmail.com"]
-    SMTP_SERVER=smtp.gmail.com
-    SMTP_PORT=587
-    SEARCH_QUERIES=["python developer", "backend engineer"]
-    LOCATIONS=["Toronto, Ontario, Canada", "Montreal, Quebec, Canada"]
-    GOOGLE_DOMAIN="google.ca"
-    GL="ca"
-    HL="en"
-    TRUSTED_DOMAINS=["linkedin", "indeed"]
-    MAX_PAGES=5
-    MIN_SALARY=50000
-    SCHEDULE_TYPES=["full-time", "part-time"]
-    BLACKLIST_COMPANIES=["hooli", "pied piper"]
-    EXCLUDE_KEYWORDS=["manager", "co-op"]
-    ```
-4.  **Run**:
-    ```bash
-    python src/main.py
-    ```
-
----
-
-## GitHub Actions Workflow
-
-The project includes a workflow (`.github/workflows/job_finder.yml`) that automates the job search.
-
-### How it Works
-
-1.  **Schedule**: Runs automatically every Thursday at 1:00 EST.
-2.  **Environment**: Builds a Docker container to ensure reproducibility.
-3.  **Execution**:
-    - Fetches job history from a dedicated orphan branch (`job-history-data`).
-    - Runs the search script.
-    - Filters out jobs seen in previous runs.
-4.  **Artifacts**:
-    - `jobs.json`: Raw data of found jobs.
-    - `jobs.md`: Formatted report.
-5.  **Notification**: 
-    - Sends a **Weekly Jobs Report** email to your specified receivers.
-    - Creates a **GitHub Issue** as an archive of the weekly search results.
-6.  **History Update**: Commits the new job IDs back to the `job-history-data` branch to prevent duplicates next week.
-
-### Setup
-
-1.  Go to **Settings** > **Secrets and variables** > **Actions**.
-2.  Add `API_KEY` and `EMAIL_PASSWORD` as **Repository Secrets**.
-3.  Add `EMAIL_ADDRESS`, `EMAIL_RECEIVER`, and other config (e.g., `SEARCH_QUERIES`) as **Repository Variables**.
+| Variable                        | Description                                                                                                   | Default                                                              |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------- |
+| `API_KEY` (**Required**)        | Your [SerpApi](https://serpapi.com/) API Key.                                                                 | `None`                                                               |
+| `SEARCH_QUERIES`                | List of job titles to search for.                                                                             | `["software developer"]`                                             |
+| `LOCATIONS`                     | List of locations to search in.                                                                               | `["Toronto, Ontario, Canada"]`                                       |
+| `MAX_PAGES`                     | Max pages to fetch per query/location.                                                                        | `5`                                                                  |
+| `MIN_SALARY`                    | Minimum annual salary.                                                                                        | `50000`                                                              |
+| `MAX_DAYS_OLD`                  | Max age of job posting in days.                                                                               | `7`                                                                  |
+| `BLACKLIST_COMPANIES`           | Companies to exclude.                                                                                         | `[]`                                                                 |
+| `EXCLUDE_KEYWORDS`              | Keywords to exclude from titles.                                                                              | `[]`                                                                 |
+| `SCHEDULE_TYPES`                | Allowed schedule types (e.g., Full-time).                                                                     | `["Full-time"]`                                                      |
+| `TRUSTED_DOMAINS`               | Allowed application sources. If set but empty (e.g. `[]`), filtering is disabled and all domains are allowed. | `["linkedin", "glassdoor", "indeed", "ziprecruiter", "simplyhired"]` |
+| `GOOGLE_DOMAIN`                 | Google domain to use.                                                                                         | `google.ca`                                                          |
+| `GL`                            | Country code.                                                                                                 | `ca`                                                                 |
+| `HL`                            | Language code.                                                                                                | `en`                                                                 |
+| `EMAIL_ADDRESS` (**Required**)  | Sender email address for notifications.                                                                       | `None`                                                               |
+| `EMAIL_PASSWORD` (**Required**) | Email [app-password](https://support.google.com/mail/answer/185833).                                          | `None`                                                               |
+| `EMAIL_RECEIVER`                | List of recipient emails (JSON list or comma-separated).                                                      | Defaults to `EMAIL_ADDRESS`                                          |
+| `SMTP_SERVER`                   | SMTP server for sending emails.                                                                               | `smtp.gmail.com`                                                     |
+| `SMTP_PORT`                     | SMTP port (usually 587 for TLS or 465 for SSL).                                                               | `587`                                                                |
 
 ---
 
