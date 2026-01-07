@@ -30,11 +30,11 @@ def test_send_email_success(email_notifier):
 
         parts = parsed.get_payload()
         assert len(parts) == 2
-        assert parts[0].get_content_type() == "text/plain"
-        assert parts[1].get_content_type() == "text/html"
+        assert parts[0].get_content_type() == "text/plain" # type: ignore
+        assert parts[1].get_content_type() == "text/html" # type: ignore
 
-        html_bytes = parts[1].get_payload(decode=True)
-        html_text = html_bytes.decode("utf-8")
+        html_bytes = parts[1].get_payload(decode=True) # type: ignore
+        html_text = html_bytes.decode("utf-8") # type: ignore
         assert "<!doctype html>" in html_text
         assert "Test Body" in html_text
         mock_smtp_instance.quit.assert_called_once()
@@ -63,11 +63,11 @@ def test_send_email_ssl(email_notifier):
 
         parts = parsed.get_payload()
         assert len(parts) == 2
-        assert parts[0].get_content_type() == "text/plain"
-        assert parts[1].get_content_type() == "text/html"
+        assert parts[0].get_content_type() == "text/plain" # type: ignore
+        assert parts[1].get_content_type() == "text/html" # type: ignore
 
-        html_bytes = parts[1].get_payload(decode=True)
-        html_text = html_bytes.decode("utf-8")
+        html_bytes = parts[1].get_payload(decode=True) # type: ignore
+        html_text = html_bytes.decode("utf-8") # type: ignore
         assert "<!doctype html>" in html_text
         assert "Test Body" in html_text
 
@@ -82,20 +82,16 @@ def test_send_email_multiple_receivers(email_notifier):
         email_notifier.send_email(receivers, "Subject", "test_file.md")
         
         mock_smtp_instance = MockSMTP.return_value
-        # sendmail should be called twice
-        assert mock_smtp_instance.sendmail.call_count == 2
+        # sendmail should be called once with all receivers
+        assert mock_smtp_instance.sendmail.call_count == 1
         
-        calls = mock_smtp_instance.sendmail.call_args_list
-        assert calls[0].args[1] == "rec1@test.com"
-        assert calls[1].args[1] == "rec2@test.com"
+        args, _ = mock_smtp_instance.sendmail.call_args
+        assert args[1] == receivers  # Recipients passed as a list
 
-        parsed_1 = message_from_string(calls[0].args[2])
-        parsed_2 = message_from_string(calls[1].args[2])
-        assert parsed_1.get_content_type() == "multipart/alternative"
-        assert parsed_2.get_content_type() == "multipart/alternative"
-
-        assert parsed_1.get_payload()[1].get_content_type() == "text/html"
-        assert parsed_2.get_payload()[1].get_content_type() == "text/html"
+        # Verify the message content
+        parsed_msg = message_from_string(args[2])
+        assert parsed_msg.get_content_type() == "multipart/alternative"
+        assert parsed_msg.get_payload()[1].get_content_type() == "text/html" # type: ignore
 
 
 def test_send_email_markdown_tables_render_to_html(email_notifier):
@@ -112,11 +108,11 @@ def test_send_email_markdown_tables_render_to_html(email_notifier):
 
         sent_message = mock_smtp_instance.sendmail.call_args.args[2]
         parsed = message_from_string(sent_message)
-        html_part = parsed.get_payload()[1]
-        assert html_part.get_content_type() == "text/html"
+        html_part = parsed.get_payload()[1] # type: ignore
+        assert html_part.get_content_type() == "text/html" # type: ignore
 
-        html_bytes = html_part.get_payload(decode=True)
-        html_text = html_bytes.decode("utf-8")
+        html_bytes = html_part.get_payload(decode=True) # type: ignore
+        html_text = html_bytes.decode("utf-8") # type: ignore
         assert "<table" in html_text
 
 
@@ -140,8 +136,8 @@ def test_send_email_details_summary_are_preprocessed(email_notifier):
 
         sent_message = mock_smtp_instance.sendmail.call_args.args[2]
         parsed = message_from_string(sent_message)
-        html_part = parsed.get_payload()[1]
-        html_text = html_part.get_payload(decode=True).decode("utf-8")
+        html_part = parsed.get_payload()[1] # type: ignore
+        html_text = html_part.get_payload(decode=True).decode("utf-8") # type: ignore
 
         # Should render a real anchor with short text, not a raw URL or markdown.
         assert "<a" in html_text
@@ -165,8 +161,8 @@ def test_send_email_includes_view_on_github_link(email_notifier):
 
         sent_message = mock_smtp_instance.sendmail.call_args.args[2]
         parsed = message_from_string(sent_message)
-        html_part = parsed.get_payload()[1]
-        html_text = html_part.get_payload(decode=True).decode("utf-8")
+        html_part = parsed.get_payload()[1] # type: ignore
+        html_text = html_part.get_payload(decode=True).decode("utf-8") # type: ignore
 
         assert "View on GitHub" in html_text
         assert "https://github.com/org/repo/issues/123" in html_text

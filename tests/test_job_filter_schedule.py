@@ -99,4 +99,4 @@ def test_job_filter_schedule_type_custom_config(mock_config):
     }
     is_valid, reason = job_filter.is_valid(job_ft)
     assert is_valid is False
-    assert "Invalid schedule type" in reason
+    assert "Invalid schedule type" in reason # type: ignore

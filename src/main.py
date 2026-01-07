@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+from datetime import datetime
 from config import Config
 from job_finder import JobFinder
 from file_manager import FileManager
@@ -132,11 +133,7 @@ def main():
     logging.info(f"Total SerpApi calls made in this session: {finder.total_api_calls}")
 
     # Send Email Notification
-    skip_email = os.getenv("SKIP_EMAIL", "").strip().lower() in {"1", "true", "yes"}
-
-    if skip_email:
-        logging.info("SKIP_EMAIL enabled. Skipping email notification.")
-    elif config.email_address and config.email_password:
+    if config.email_address and config.email_password:
         logging.info("Email configuration found. Sending notification...")
         email_notifier = EmailNotification(
             config.smtp_server,
@@ -145,7 +142,6 @@ def main():
             config.email_password
         )
         
-        from datetime import datetime
         report_date = datetime.now().strftime("%Y-%m-%d")
         subject = f"Weekly Jobs Report - {report_date}"
 

@@ -109,7 +109,7 @@ def test_job_filter_punctuation_keyword(mock_config):
     }
     is_valid, reason = job_filter.is_valid(job1)
     assert is_valid is False
-    assert "Excluded keyword" in reason
+    assert "Excluded keyword" in reason # type: ignore
 
     # Should reject "Developer Sr."
     job2 = {
@@ -118,7 +118,7 @@ def test_job_filter_punctuation_keyword(mock_config):
     }
     is_valid, reason = job_filter.is_valid(job2)
     assert is_valid is False
-    assert "Excluded keyword" in reason
+    assert "Excluded keyword" in reason # type: ignore
     
     # Should NOT reject "Sr" (without dot) if only "sr." is excluded
     # (Though usually you'd exclude both, this tests exact matching)

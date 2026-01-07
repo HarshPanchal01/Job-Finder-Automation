@@ -78,7 +78,7 @@ def test_main_multiple_queries(mock_shutil_copy, mock_getsize, mock_file_manager
 
 
 @patch("main.EmailNotification")
-@patch("datetime.datetime")
+@patch("main.datetime")
 @patch("main.Config")
 @patch("main.JobFinder")
 @patch("main.JobHistory")

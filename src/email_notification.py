@@ -86,18 +86,17 @@ class EmailNotification:
             
             server.login(self.sender_email, self.sender_password)
 
-            for receiver_email in receiver_emails:
-                msg = MIMEMultipart('alternative')
-                msg['From'] = self.sender_email
-                msg['To'] = receiver_email
-                msg['Subject'] = subject
+            msg = MIMEMultipart('alternative')
+            msg['From'] = self.sender_email
+            msg['To'] = ", ".join(receiver_emails)
+            msg['Subject'] = subject
 
-                msg.attach(MIMEText(body_content, 'plain', 'utf-8'))
-                msg.attach(MIMEText(html_doc, 'html', 'utf-8'))
-                
-                text = msg.as_string()
-                server.sendmail(self.sender_email, receiver_email, text)
-                logging.info(f"Email sent successfully to {receiver_email}")
+            msg.attach(MIMEText(body_content, 'plain', 'utf-8'))
+            msg.attach(MIMEText(html_doc, 'html', 'utf-8'))
+            
+            text = msg.as_string()
+            server.sendmail(self.sender_email, receiver_emails, text)
+            logging.info(f"Email sent successfully to {len(receiver_emails)} recipients.")
             
             server.quit()
         except Exception as e:
