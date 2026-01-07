@@ -198,6 +198,8 @@ This project uses the [SerpApi Google Jobs API](https://serpapi.com/google-jobs-
 
 You don't need to change code! Just update your `.env` file or GitHub Repository Variables.
 
+**Note relating to Locations**: Please use the full location name (e.g. "Toronto, Ontario, Canada" instead of "Toronto, ON"). The system automatically handles formatting for US and Canadian locations to optimize search results. For international locations, the full string provided will be used.
+
 ---
 
 ## License

@@ -88,9 +88,5 @@ def format_location_for_query(location_str):
         
         if short_region:
             return f"{city}, {short_region}"
-            
-    # Fallback: return the first two parts if available, else original
-    if len(parts) >= 2:
-        return f"{parts[0]}, {parts[1]}"
         
     return location_str
