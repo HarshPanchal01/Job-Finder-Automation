@@ -137,15 +137,15 @@ export default function App() {
               role="switch"
               aria-checked={!isDark} // true when light mode is ON
               aria-label="Toggle theme"
-              className="group relative inline-flex h-9 w-14 items-center rounded-full border border-black/15 bg-white p-1 transition dark:border-white/15 dark:bg-white/10"
+              className="group relative inline-flex h-7 w-15 items-center rounded-full border border-black/15 bg-white p-1 transition dark:border-white/15 dark:bg-white/10"
               title={isDark ? "Switch to light mode" : "Switch to dark mode"}
             >
               {/* knob */}
               <span
                 className={[
-                  "h-7 w-7 rounded-full transition-transform hover:cursor-pointer",
+                  "h-5 w-5 rounded-full transition-transform hover:cursor-pointer",
                   "bg-yellow-400/90",
-                  isDark ? "translate-x-0" : "translate-x-5",
+                  isDark ? "translate-x-0" : "translate-x-7.5",
                 ].join(" ")}
               />
             </button>
