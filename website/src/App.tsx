@@ -12,11 +12,17 @@ import githubLogoWhite from "./assets/github-mark-white.png";
 import githubLogoDark from "./assets/github-mark-dark.png";
 import dockerLogo from "./assets/docker-mark-blue.png";
 import secretsImage from "./assets/secrets.png";
+import secretsImageWhite from "./assets/secretsWhite.png";
 import variablesImage from "./assets/variables.png";
+import variablesImageWhite from "./assets/variablesWhite.png";
 import actionsImage from "./assets/actions-logs.png";
+import actionsImageWhite from "./assets/actions-logs-white.png";
 import jobHistoryImage from "./assets/job-history.png";
+import jobHistoryImageWhite from "./assets/job-history-white.png";
 import emailInboxImage from "./assets/email-inbox.png";
+import emailInboxImageWhite from "./assets/email-inbox-white.png";
 import githubIssueImage from "./assets/github-issue.png";
+import githubIssueImageWhite from "./assets/github-issue-white.png";
 
 type Theme = "light" | "dark";
 const STORAGE_KEY = "jfa_theme";
@@ -232,7 +238,11 @@ export default function App() {
               {i === 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
-                    onClick={() => setExpandedImage(secretsImage)}
+                    onClick={() =>
+                      setExpandedImage(
+                        isDark ? secretsImage : secretsImageWhite
+                      )
+                    }
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -240,7 +250,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={secretsImage}
+                        src={isDark ? secretsImage : secretsImageWhite}
                         alt="GitHub Secrets setup"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -249,7 +259,11 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => setExpandedImage(variablesImage)}
+                    onClick={() =>
+                      setExpandedImage(
+                        isDark ? variablesImage : variablesImageWhite
+                      )
+                    }
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -257,7 +271,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={variablesImage}
+                        src={isDark ? variablesImage : variablesImageWhite}
                         alt="GitHub Variables setup"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -270,7 +284,7 @@ export default function App() {
               {i === 1 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
-                    onClick={() => setExpandedImage(actionsImage)}
+                    onClick={() => setExpandedImage(isDark ? actionsImage : actionsImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -278,7 +292,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={actionsImage}
+                        src={isDark ? actionsImage : actionsImageWhite}
                         alt="Automated discovery screenshot 1"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -287,7 +301,7 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => setExpandedImage(jobHistoryImage)}
+                    onClick={() => setExpandedImage(isDark ? jobHistoryImage : jobHistoryImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -296,7 +310,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={jobHistoryImage}
+                        src={isDark ? jobHistoryImage : jobHistoryImageWhite}
                         alt="Automated discovery screenshot 2"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -309,7 +323,7 @@ export default function App() {
               {i === 2 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div
-                    onClick={() => setExpandedImage(emailInboxImage)}
+                    onClick={() => setExpandedImage(isDark ? emailInboxImage : emailInboxImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -317,7 +331,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={emailInboxImage}
+                        src={isDark ? emailInboxImage : emailInboxImageWhite}
                         alt="Email inbox with weekly report"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
@@ -326,7 +340,7 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => setExpandedImage(githubIssueImage)}
+                    onClick={() => setExpandedImage(isDark ? githubIssueImage : githubIssueImageWhite)}
                     className="overflow-hidden rounded-2xl border border-black/5 bg-gray-50 p-4 cursor-pointer hover:border-black/10 hover:bg-black/5 transition-all hover:scale-105 flex flex-col dark:border-white/10 dark:bg-white/5 dark:hover:border-white/30 dark:hover:bg-white/10"
                   >
                     <p className="text-sm font-medium text-neutral-700 dark:text-white/70 mb-3">
@@ -334,7 +348,7 @@ export default function App() {
                     </p>
                     <div className="h-[240px] md:h-[260px] flex items-center justify-center">
                       <img
-                        src={githubIssueImage}
+                        src={isDark ? githubIssueImage : githubIssueImageWhite}
                         alt="GitHub Issue with weekly report"
                         className="w-full max-h-full object-contain"
                         loading="lazy"
