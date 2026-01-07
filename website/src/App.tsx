@@ -482,7 +482,7 @@ export default function App() {
             </div>
 
             <p className="mt-6 text-sm text-neutral-600 flex flex-wrap items-center gap-1 dark:text-white/60">
-              <span className="ml-2">© 2025</span>
+              <span className="ml-2">© 2026</span>
               <span>Made with care by</span>
               <a
                 href="https://github.com/HarshPanchal01"
