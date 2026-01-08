@@ -1,13 +1,47 @@
 import logging
+import time
+import json
 from serpapi import GoogleSearch
 
 class JobFinder:
-    def __init__(self, api_key, max_pages=5, results_per_page=10):
+    def __init__(self, api_key, max_pages=5, max_retries=3):
         self.api_key = api_key
         self.max_pages = max_pages
-        self.results_per_page = results_per_page
         self.total_api_calls = 0
+        self.max_retries = max_retries
         logging.info("JobFinder instance created.")
+
+    def _fetch_with_retry(self, search_params) -> dict:
+        """
+        Fetches results from SerpApi with retry logic for transient failures.
+        """
+        for attempt in range(self.max_retries):
+            try:
+                search = GoogleSearch(search_params)
+                logging.info("Sending request to SerpApi...")
+                results = search.get_dict()
+                self.total_api_calls += 1
+                return results
+            except json.JSONDecodeError as e:
+                logging.warning(f"API returned invalid JSON (attempt {attempt + 1}/{self.max_retries}): {e}")
+                if attempt < self.max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s
+                    logging.info(f"Retrying in {wait_time} seconds...")
+                    time.sleep(wait_time)
+                else:
+                    logging.error("Max retries reached. API request failed.")
+                    raise
+            except Exception as e:
+                logging.warning(f"API request failed (attempt {attempt + 1}/{self.max_retries}): {e}")
+                if attempt < self.max_retries - 1:
+                    wait_time = 2 ** attempt
+                    logging.info(f"Retrying in {wait_time} seconds...")
+                    time.sleep(wait_time)
+                else:
+                    logging.error("Max retries reached. API request failed.")
+                    raise
+        # This should never be reached due to raise statements above
+        raise RuntimeError("Failed to fetch results after all retries")
 
     def search_jobs(self, params):
         """
@@ -29,10 +63,7 @@ class JobFinder:
             else:
                 logging.info("Fetching first page of results.")
 
-            search = GoogleSearch(search_params)
-            logging.info("Sending request to SerpApi...")
-            results = search.get_dict()
-            self.total_api_calls += 1
+            results = self._fetch_with_retry(search_params)
 
             if "error" in results:
                 logging.error(f"Error from API: {results['error']}")
